@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GridPilot | 微网储能运营 AI 助手</title>
+    <style>
+        :root {
+            --bg: #f6efe5;
+            --bg-deep: #f0e6d9;
+            --surface: rgba(255, 251, 245, 0.82);
+            --surface-strong: #fffaf2;
+            --ink: #211a15;
+            --muted: #76695c;
+            --line: rgba(63, 45, 28, 0.14);
+            --line-strong: rgba(63, 45, 28, 0.28);
+            --accent: #bf6c34;
+            --accent-soft: rgba(191, 108, 52, 0.12);
+            --shadow: 0 24px 80px -36px rgba(74, 49, 30, 0.26);
+            --radius-xl: 36px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100dvh;
+            color: var(--ink);
+            font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC",
+                "Microsoft YaHei", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 255, 255, 0.62), transparent 34%),
+                radial-gradient(circle at 86% 14%, rgba(191, 108, 52, 0.08), transparent 22%),
+                linear-gradient(180deg, #f8f2e8 0%, var(--bg) 52%, var(--bg-deep) 100%);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(33, 26, 21, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(33, 26, 21, 0.025) 1px, transparent 1px);
+            background-size: 34px 34px;
+            mask-image: radial-gradient(circle at center, black 42%, transparent 100%);
+            opacity: 0.32;
+        }
+
+        ::selection {
+            background: rgba(191, 108, 52, 0.18);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        main {
+            position: relative;
+            width: min(1280px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 96px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 8px 0 26px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-mark {
+            width: 52px;
+            height: 52px;
+            padding: 12px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(250, 240, 228, 0.88));
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.7),
+                0 20px 44px -24px rgba(102, 68, 42, 0.34);
+        }
+
+        .brand-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-copy small {
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .topnav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .topnav a {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(63, 45, 28, 0.1);
+            background: rgba(255, 250, 243, 0.62);
+            color: var(--muted);
+            font-size: 14px;
+            transition: transform 180ms ease, border-color 180ms ease, color 180ms ease;
+        }
+
+        .topnav a:hover {
+            transform: translateY(-1px);
+            border-color: rgba(191, 108, 52, 0.25);
+            color: var(--ink);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.12fr) minmax(360px, 0.88fr);
+            gap: 32px;
+            align-items: stretch;
+        }
+
+        .hero-copy {
+            display: grid;
+            align-content: start;
+            gap: 22px;
+            padding: 26px 0 12px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+            padding: 9px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(191, 108, 52, 0.18);
+            background: rgba(255, 248, 241, 0.84);
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 6px rgba(191, 108, 52, 0.08);
+        }
+
+        h1 {
+            margin: 0;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.02em;
+            width: fit-content;
+            max-width: none;
+            font-size: clamp(2.8rem, 5.9vw, 4.8rem);
+            line-height: 0.98;
+            letter-spacing: -0.05em;
+        }
+
+        .hero-break {
+            display: block;
+            white-space: nowrap;
+        }
+
+        .hero-strip {
+            margin: -8px 0 0;
+            color: rgba(96, 80, 66, 0.92);
+            font-size: clamp(0.96rem, 1.4vw, 1.15rem);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .hero-lede {
+            max-width: 62ch;
+            margin: 0;
+            color: var(--muted);
+            font-size: clamp(1.04rem, 1.65vw, 1.36rem);
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255, 251, 245, 0.78);
+            color: var(--ink);
+            font-weight: 600;
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+        }
+
+        .button:hover {
+            transform: translateY(-1px);
+            border-color: rgba(191, 108, 52, 0.24);
+            box-shadow: 0 16px 40px -26px rgba(74, 49, 30, 0.4);
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, #d27a3f 0%, #b25d29 100%);
+            color: #fffaf4;
+            border-color: transparent;
+            box-shadow: 0 18px 44px -26px rgba(159, 87, 36, 0.58);
+        }
+
+        .meta-ribbon {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .meta-item {
+            padding: 18px 18px 16px;
+            border-top: 1px solid var(--line-strong);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.12));
+        }
+
+        .meta-item strong {
+            display: block;
+            font-size: 2rem;
+            letter-spacing: -0.05em;
+        }
+
+        .meta-item span {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .hero-panel {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.62);
+            background:
+                radial-gradient(circle at top right, rgba(191, 108, 52, 0.12), transparent 26%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 250, 242, 0.54));
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                var(--shadow);
+            backdrop-filter: blur(20px);
+        }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            border-radius: calc(var(--radius-xl) - 10px);
+            border: 1px solid rgba(191, 108, 52, 0.12);
+            pointer-events: none;
+        }
+
+        .hero-panel-body {
+            position: relative;
+            min-height: 100%;
+            padding: 26px 24px 24px;
+        }
+
+        .panel-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.76);
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .panel-tag+.panel-tag {
+            margin-left: 8px;
+        }
+
+        .hero-panel-copy {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hero-panel-copy p {
+            margin: 0;
+            max-width: 36ch;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .hero-capture {
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+            border-radius: 28px;
+            border: 1px solid rgba(63, 45, 28, 0.12);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(249, 241, 232, 0.82)),
+                rgba(255, 251, 245, 0.9);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.64),
+                0 24px 52px -36px rgba(74, 49, 30, 0.32);
+        }
+
+        .hero-capture img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .annotation {
+            position: absolute;
+            padding: 10px 12px;
+            max-width: 180px;
+            border-radius: 16px;
+            border: 1px solid rgba(63, 45, 28, 0.12);
+            background: rgba(255, 253, 249, 0.8);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0 18px 40px -30px rgba(74, 49, 30, 0.34);
+        }
+
+        .annotation strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--ink);
+        }
+
+        .annotation.top-left {
+            top: 134px;
+            left: 20px;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        .annotation.bottom-right {
+            right: 24px;
+            bottom: 76px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .hero-note {
+            padding: 16px 18px 0;
+            border-top: 1px dashed rgba(63, 45, 28, 0.16);
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .section {
+            margin-top: 88px;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: minmax(220px, 0.4fr) minmax(0, 1fr);
+            gap: 28px;
+            align-items: start;
+        }
+
+        .section-grid--visuals {
+            grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
+            gap: 22px;
+        }
+
+        .section-grid--visuals .section-kicker {
+            max-width: 300px;
+        }
+
+        .section-kicker--visuals {
+            display: grid;
+            gap: 20px;
+        }
+
+        .section-kicker {
+            position: sticky;
+            top: 18px;
+        }
+
+        .section-kicker small {
+            display: inline-block;
+            margin-bottom: 12px;
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        .section-kicker h2 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 0.98;
+            letter-spacing: -0.06em;
+        }
+
+        .value-kicker h2 {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.04em;
+            width: fit-content;
+            max-width: none;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 0.98;
+        }
+
+        .value-break {
+            display: block;
+            white-space: nowrap;
+        }
+
+        .section-kicker p {
+            margin: 16px 0 0;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .visuals-kicker-card {
+            padding: 20px 18px;
+            border-radius: calc(var(--radius-lg) - 2px);
+            border: 1px solid rgba(63, 45, 28, 0.1);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(248, 240, 230, 0.5)),
+                rgba(255, 250, 244, 0.88);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.56),
+                0 18px 34px -28px rgba(74, 49, 30, 0.22);
+        }
+
+        .visuals-kicker-card strong {
+            display: block;
+            margin-bottom: 14px;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .visuals-kicker-list {
+            display: grid;
+            gap: 14px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .visuals-kicker-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .visuals-kicker-index {
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: rgba(191, 108, 52, 0.12);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+        }
+
+        .visuals-kicker-copy strong {
+            margin: 0 0 3px;
+            font-size: 0.96rem;
+        }
+
+        .visuals-kicker-copy p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .surface {
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.62);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 252, 246, 0.48)),
+                rgba(255, 250, 244, 0.88);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.55),
+                var(--shadow);
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .story-block {
+            padding: 24px;
+            border-top: 1px solid var(--line-strong);
+        }
+
+        .story-block strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+            letter-spacing: -0.03em;
+        }
+
+        .story-block p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .workflow-panel {
+            padding: 24px;
+        }
+
+        .workflow-list {
+            display: grid;
+            gap: 16px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .workflow-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 16px;
+            align-items: start;
+            padding: 16px 0;
+            border-top: 1px solid rgba(63, 45, 28, 0.1);
+        }
+
+        .workflow-item:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .workflow-index {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            border: 1px solid rgba(191, 108, 52, 0.18);
+            background: rgba(191, 108, 52, 0.08);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .workflow-item strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 1.02rem;
+        }
+
+        .workflow-item p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .workflow-aside {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px dashed rgba(63, 45, 28, 0.16);
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .capability-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .capability {
+            display: grid;
+            gap: 18px;
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 252, 246, 0.62);
+        }
+
+        .capability-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .capability-header strong {
+            font-size: 1.16rem;
+            letter-spacing: -0.03em;
+        }
+
+        .capability-header span {
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .capability p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 255, 255, 0.66);
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .chip::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        .scenario-rail {
+            display: grid;
+            gap: 14px;
+        }
+
+        .scenario {
+            display: grid;
+            grid-template-columns: 88px 1fr;
+            gap: 18px;
+            padding: 18px 0;
+            border-top: 1px solid rgba(63, 45, 28, 0.1);
+        }
+
+        .scenario:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .scenario-id {
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .scenario strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .scenario p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .visual-panel {
+            padding: 26px;
+        }
+
+        .visual-panel h3 {
+            margin: 0 0 12px;
+            font-size: 1.5rem;
+            letter-spacing: -0.04em;
+        }
+
+        .visual-panel p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .visual-band {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .band {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 13px;
+            border-radius: 999px;
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 255, 255, 0.68);
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .band::before {
+            content: "";
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+        }
+
+        .band.deep::before {
+            background: #4f74bf;
+        }
+
+        .band.low::before {
+            background: #5a8d52;
+        }
+
+        .band.flat::before {
+            background: #909090;
+        }
+
+        .band.high::before {
+            background: #d88540;
+        }
+
+        .band.spike::before {
+            background: #d74b3d;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .shot {
+            display: grid;
+            gap: 14px;
+            padding: 18px;
+            min-height: 276px;
+            border-radius: var(--radius-lg);
+            border: 1px dashed rgba(63, 45, 28, 0.2);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(250, 243, 234, 0.72)),
+                rgba(255, 251, 245, 0.8);
+        }
+
+        .shot-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .shot-media {
+            overflow: hidden;
+            border-radius: calc(var(--radius-lg) - 6px);
+            border: 1px solid rgba(63, 45, 28, 0.12);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(247, 239, 229, 0.72)),
+                rgba(255, 250, 243, 0.7);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.55),
+                0 18px 34px -28px rgba(74, 49, 30, 0.28);
+        }
+
+        .shot-media img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .shot-media-contain {
+            display: grid;
+            place-items: center;
+            padding: 12px;
+        }
+
+        .shot-media-contain img {
+            max-height: 460px;
+            width: auto;
+        }
+
+        .shot-copy {
+            display: grid;
+            gap: 8px;
+        }
+
+        .shot-copy strong {
+            font-size: 1.06rem;
+            color: var(--ink);
+        }
+
+        .shot-copy span {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .shot figcaption {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .ops-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+            gap: 18px;
+        }
+
+        .install-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .install-step {
+            padding: 20px 18px;
+            border-top: 1px solid var(--line-strong);
+            background: rgba(255, 252, 246, 0.52);
+        }
+
+        .install-step strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.08rem;
+            letter-spacing: -0.03em;
+        }
+
+        .install-step p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.72;
+        }
+
+        .adoption-shot {
+            overflow: hidden;
+            margin-top: 18px;
+            border-radius: calc(var(--radius-lg) - 2px);
+            border: 1px solid rgba(63, 45, 28, 0.12);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(247, 239, 229, 0.74)),
+                rgba(255, 250, 243, 0.74);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 18px 34px -28px rgba(74, 49, 30, 0.26);
+        }
+
+        .adoption-shot img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .footnote {
+            margin-top: 68px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(63, 45, 28, 0.16);
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @media (max-width: 1080px) {
+
+            .hero,
+            .ops-shell,
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-kicker {
+                position: static;
+            }
+
+            .meta-ribbon,
+            .story-grid,
+            .capability-grid,
+            .install-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .screenshot-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            main {
+                width: min(100% - 24px, 1280px);
+                padding-top: 20px;
+            }
+
+            .topbar,
+            .hero-actions,
+            .topnav,
+            .meta-ribbon,
+            .story-grid,
+            .capability-grid,
+            .install-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar,
+            .hero-actions,
+            .visual-band {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .scenario {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .hero-panel-copy {
+                display: grid;
+            }
+
+            .annotation {
+                position: static;
+                max-width: none;
+                margin-top: 14px;
+            }
+
+            .annotation.top-left,
+            .annotation.bottom-right {
+                top: auto;
+                right: auto;
+                left: auto;
+                bottom: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header class="topbar">
+            <a class="brand" href="#top">
+                <span class="brand-mark">
+                    <img src="build/icon.png" alt="GridPilot 图标" />
+                </span>
+                <span class="brand-copy">
+                    <strong>GridPilot</strong>
+                    <small>Microgrid Operations AI</small>
+                </span>
+            </a>
+            <nav class="topnav" aria-label="页面导航">
+                <a href="#value">产品价值</a>
+                <a href="#workflow">AI 如何工作</a>
+                <a href="#scenes">典型场景</a>
+                <a href="#visuals">图表与示意图</a>
+                <a href="#start">开始使用</a>
+                <a href="#next">下一步</a>
+                <a href="gridpilot-guide.html" style="background:var(--accent);color:#fff7f0;border-color:transparent;font-weight:600;box-shadow:0 18px 44px -26px rgba(159,87,36,0.58);">使用说明 →</a>
+            </nav>
+        </header>
+
+        <section class="hero" id="top">
+            <div class="hero-copy">
+                <div class="eyebrow">GridPilot Showcase</div>
+                <h1 aria-label="储能运营 一句话的事儿">
+                    <span class="hero-break">储能运营</span>
+                    <span class="hero-break">一句话的事儿</span>
+                </h1>
+                <p class="hero-strip">排程查询 / 异常诊断 / 运行分析</p>
+                <p class="hero-lede">
+                    微网储能运营 AI 助手，把排程、运行、电价和约束收进一次对话里。
+                </p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="#visuals">查看界面亮点</a>
+                    <a class="button" href="#workflow">了解 AI 如何帮你工作</a>
+                </div>
+                <div class="meta-ribbon" aria-label="页面摘要信息">
+                    <div class="meta-item">
+                        <strong>9</strong>
+                        <span>9 个专业查询分析工具。</span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>7</strong>
+                        <span>7 种经过验证的分析模式。</span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>本地</strong>
+                        <span>数据保存在本地。</span>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="hero-panel" aria-label="GridPilot 完整工作界面">
+                <div class="hero-panel-body">
+                    <div class="hero-panel-copy">
+                        <div>
+                            <span class="panel-tag">自然语言入口</span>
+                            <span class="panel-tag">完整工作界面</span>
+                        </div>
+                        <p>聊天、工具调用、图表结果和微网上下文在同一视图里联动展示。</p>
+                    </div>
+
+                    <div class="hero-capture">
+                        <img src="pics/完整工作界面-线稿.svg" alt="GridPilot 完整工作界面线稿示意图，包含聊天区、图表结果与微网上下文面板" />
+                    </div>
+
+                    <div class="annotation top-left">
+                        <strong>从一句话开始</strong>
+                        不用先翻系统，也不用记编号。
+                    </div>
+                    <div class="annotation bottom-right">
+                        <strong>到一张图结束</strong>
+                        电价色带和负荷图表一起给结论。
+                    </div>
+                    <div class="hero-note">
+                        一次对话里同时完成提问、查询、图表呈现和结论输出。
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section section-grid" id="value">
+            <div class="section-kicker value-kicker">
+                <small>Value</small>
+                <h2 aria-label="不是聊天机器人 是储能运营入口">
+                    <span class="value-break">不是聊天机器人</span>
+                    <span class="value-break">是储能运营入口</span>
+                </h2>
+                <p>少切系统，直接拿结论。</p>
+            </div>
+
+            <div class="surface">
+                <div class="story-grid">
+                    <div class="story-block">
+                        <strong>自然语言交互，不再先翻系统</strong>
+                        <p>直接问问题，系统自己决定查什么。</p>
+                    </div>
+                    <div class="story-block">
+                        <strong>用微网名称直接工作</strong>
+                        <p>支持模糊匹配，不必记技术编号。</p>
+                    </div>
+                    <div class="story-block">
+                        <strong>电价色带和负荷图表，一图说清问题</strong>
+                        <p>电价色带、排程柱和功率线会自动组合。</p>
+                    </div>
+                    <div class="story-block">
+                        <strong>数据保存在本地，权限策略可调</strong>
+                        <p>本地优先，并支持交互式权限确认与自动批准配置。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-grid" id="workflow">
+            <div class="section-kicker">
+                <small>Workflow</small>
+                <h2>AI 如何帮你工作</h2>
+                <p>理解问题，调用工具，组合结果。</p>
+            </div>
+
+            <div class="surface workflow-panel">
+                <ol class="workflow-list">
+                    <li class="workflow-item">
+                        <div class="workflow-index">01</div>
+                        <div>
+                            <strong>理解问题和微网对象</strong>
+                            <p>识别意图，建立微网上下文。</p>
+                        </div>
+                    </li>
+                    <li class="workflow-item">
+                        <div class="workflow-index">02</div>
+                        <div>
+                            <strong>自动选择查询分析工具</strong>
+                            <p>自动选择 9 个专业查询分析工具。</p>
+                        </div>
+                    </li>
+                    <li class="workflow-item">
+                        <div class="workflow-index">03</div>
+                        <div>
+                            <strong>串联多数据源交叉验证</strong>
+                            <p>串联排程、运行、电价，必要时补查约束。</p>
+                        </div>
+                    </li>
+                    <li class="workflow-item">
+                        <div class="workflow-index">04</div>
+                        <div>
+                            <strong>把结果自动组合成合适图表</strong>
+                            <p>自动生成负荷图表和结论。</p>
+                        </div>
+                    </li>
+                </ol>
+                <div class="workflow-aside">
+                    底层能力对应 7 种经过验证的分析模式。
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-grid">
+            <div class="section-kicker">
+                <small>Capability</small>
+                <h2>真正懂储能运营的几件事</h2>
+                <p>讲明确能力，不讲空话。</p>
+            </div>
+
+            <div class="capability-grid">
+                <article class="capability">
+                    <div class="capability-header">
+                        <strong>业务知识不是外挂</strong>
+                        <span>Domain</span>
+                    </div>
+                    <p>排程策略、电价逻辑、单位换算和物理约束都在系统理解范围内。</p>
+                    <div class="chip-row">
+                        <span class="chip">排程策略</span>
+                        <span class="chip">电价套利逻辑</span>
+                        <span class="chip">功率与电量换算</span>
+                        <span class="chip">物理约束体系</span>
+                    </div>
+                </article>
+
+                <article class="capability">
+                    <div class="capability-header">
+                        <strong>微网上下文自动跟随</strong>
+                        <span>Context</span>
+                    </div>
+                    <p>提到哪个微网，右侧面板就跟到哪里。</p>
+                    <div class="chip-row">
+                        <span class="chip">微网名称模糊匹配</span>
+                        <span class="chip">快捷查询按钮</span>
+                        <span class="chip">物理约束信息</span>
+                    </div>
+                </article>
+
+                <article class="capability">
+                    <div class="capability-header">
+                        <strong>可视化不是“补图”，而是结果的一部分</strong>
+                        <span>Visual</span>
+                    </div>
+                    <p>查询结果会自动落成适合该场景的图层组合。</p>
+                    <div class="chip-row">
+                        <span class="chip">电价色带</span>
+                        <span class="chip">排程柱状图</span>
+                        <span class="chip">实际功率曲线</span>
+                        <span class="chip">负荷对比图</span>
+                    </div>
+                </article>
+
+                <article class="capability">
+                    <div class="capability-header">
+                        <strong>本地优先，但模型和权限足够灵活</strong>
+                        <span>Control</span>
+                    </div>
+                    <p>数据保存在本地，并支持多服务商和权限调节。</p>
+                    <div class="chip-row">
+                        <span class="chip">本地优先</span>
+                        <span class="chip">多服务商配置</span>
+                        <span class="chip">权限确认可调</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section section-grid" id="scenes">
+            <div class="section-kicker">
+                <small>Scenarios</small>
+                <h2>典型场景怎么讲，才不空泛</h2>
+                <p>只保留最能说明价值的 4 类场景。</p>
+            </div>
+
+            <div class="surface workflow-panel">
+                <div class="scenario-rail">
+                    <div class="scenario">
+                        <div class="scenario-id">Scene 01</div>
+                        <div>
+                            <strong>日常排程查询</strong>
+                            <p>一句话拉出排程柱状图和电价色带。</p>
+                        </div>
+                    </div>
+                    <div class="scenario">
+                        <div class="scenario-id">Scene 02</div>
+                        <div>
+                            <strong>排程执行监控</strong>
+                            <p>排程计划和实际功率一图对比。</p>
+                        </div>
+                    </div>
+                    <div class="scenario">
+                        <div class="scenario-id">Scene 03</div>
+                        <div>
+                            <strong>异常诊断</strong>
+                            <p>沿着查计划、查电价、查约束的路径给结论。</p>
+                        </div>
+                    </div>
+                    <div class="scenario">
+                        <div class="scenario-id">Scene 04</div>
+                        <div>
+                            <strong>收益优化与排程生成</strong>
+                            <p>支持回测比较，也支持带约束生成新排程。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-grid section-grid--visuals" id="visuals">
+            <div class="section-kicker section-kicker--visuals">
+                <small>Visuals</small>
+                <h2>界面与图表亮点</h2>
+                <p>从对话到图表，界面围绕运营分析展开。</p>
+                <div class="surface visuals-kicker-card">
+                    <strong>这一组图，主要看三件事</strong>
+                    <ul class="visuals-kicker-list">
+                        <li class="visuals-kicker-item">
+                            <span class="visuals-kicker-index">01</span>
+                            <div class="visuals-kicker-copy">
+                                <strong>对话区会直接给图表</strong>
+                                <p>完整工作界面能看到提问、分析过程和结果输出在同一处完成。</p>
+                            </div>
+                        </li>
+                        <li class="visuals-kicker-item">
+                            <span class="visuals-kicker-index">02</span>
+                            <div class="visuals-kicker-copy">
+                                <strong>复合图会把业务信息叠在一起</strong>
+                                <p>排程柱、功率线和电价色带放在一张图里，更适合运营判断。</p>
+                            </div>
+                        </li>
+                        <li class="visuals-kicker-item">
+                            <span class="visuals-kicker-index">03</span>
+                            <div class="visuals-kicker-copy">
+                                <strong>右侧面板会跟着微网上下文联动</strong>
+                                <p>提到哪个微网，卡片、约束和快捷操作就切到哪个微网。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <div class="surface visual-panel">
+                    <h3>电价色带是视觉主角，不是装饰背景</h3>
+                    <p>排程柱状图、实际功率曲线和电价色带会自动融合。</p>
+                    <div class="visual-band" aria-label="电价色带说明">
+                        <span class="band deep">深谷</span>
+                        <span class="band low">谷</span>
+                        <span class="band flat">平</span>
+                        <span class="band high">峰</span>
+                        <span class="band spike">峰尖</span>
+                    </div>
+                </div>
+
+                <div class="screenshot-grid">
+                    <figure class="shot" data-slot="screenshot">
+                        <div class="shot-label">负荷图表</div>
+                        <div class="shot-media">
+                            <img src="pics/排程与实际负荷图-线稿.svg" alt="排程与实际负荷图线稿示意图" />
+                        </div>
+                        <div class="shot-copy">
+                            <strong>排程与实际负荷图</strong>
+                            <span>排程柱、功率线和电价色带会自动融合。</span>
+                        </div>
+                        <figcaption>产品线稿示意图，重点保留复合图表的业务层次与分析结构。</figcaption>
+                    </figure>
+
+                    <figure class="shot shot--panel" data-slot="screenshot">
+                        <div class="shot-label">上下文面板</div>
+                        <div class="shot-media shot-media-contain">
+                            <img src="pics/微网上下文面板-线稿.svg" alt="微网上下文面板线稿示意图" />
+                        </div>
+                        <div class="shot-copy">
+                            <strong>微网上下文面板</strong>
+                            <span>微网卡片、约束参数和快捷操作在同一侧边栏联动展示。</span>
+                        </div>
+                        <figcaption>提到哪个微网，右侧面板就跟到哪里。</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-grid">
+            <div class="section-kicker">
+                <small>Adoption</small>
+                <h2>开始使用，也尽量讲得克制</h2>
+                <p>开始方式很简单：装好、连上、开问。</p>
+            </div>
+
+            <div class="ops-shell">
+                <div class="surface visual-panel">
+                    <h3>连接数据服务，然后直接开始提问</h3>
+                    <p>下载安装，连接数据服务，然后直接开始提问。</p>
+                    <div class="install-grid">
+                        <div class="install-step">
+                            <strong>01 下载安装</strong>
+                            <p>支持 macOS、Windows、Linux。</p>
+                        </div>
+                        <div class="install-step">
+                            <strong>02 连接数据服务</strong>
+                            <p>连上后才能查询排程、运行数据和电价。</p>
+                        </div>
+                        <div class="install-step">
+                            <strong>03 开始提问</strong>
+                            <p>系统自动理解意图、调用工具并输出图表。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="surface visual-panel">
+                    <h3>数据服务连接设置页</h3>
+                    <p>连接地址、状态反馈和服务管理都在同一页里完成，配置路径清晰可见。</p>
+                    <div class="adoption-shot">
+                        <img src="pics/数据服务连接设置页-线稿.svg" alt="数据服务连接设置页线稿示意图" />
+                    </div>
+                    <div class="chip-row" style="margin-top: 18px">
+                        <span class="chip">会话可恢复</span>
+                        <span class="chip">模型可切换</span>
+                        <span class="chip">支持多服务商</span>
+                        <span class="chip">权限策略可调</span>
+                        <span class="chip">微网面板可联动</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-grid" id="next">
+            <div class="section-kicker">
+                <small>Coming Next</small>
+                <h2>接下来会做的事</h2>
+                <p>已经在路上的两个方向。</p>
+            </div>
+
+            <div class="capability-grid">
+                <article class="capability">
+                    <div class="capability-header">
+                        <strong>随时随地掌握运营动态</strong>
+                        <span>Bridge</span>
+                    </div>
+                    <p>Bridge 把 GridPilot 连到飞书、Telegram、Discord 和 QQ。在现场巡检时用手机查排程，在桌面收到完整图表分析。</p>
+                    <div class="chip-row">
+                        <span class="chip">飞书</span>
+                        <span class="chip">Telegram</span>
+                        <span class="chip">Discord</span>
+                        <span class="chip">QQ</span>
+                    </div>
+                </article>
+
+                <article class="capability">
+                    <div class="capability-header">
+                        <strong>越用越懂你的运营习惯</strong>
+                        <span>Workspace</span>
+                    </div>
+                    <p>配置工作区文件，定义常用微网、分析偏好和运营规则。GridPilot 会随使用积累记忆，逐步适应你的排程检查习惯和诊断思路。</p>
+                    <div class="chip-row">
+                        <span class="chip">运营人设</span>
+                        <span class="chip">分析偏好</span>
+                        <span class="chip">持久记忆</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <footer class="footnote" id="start">
+            GridPilot 让排程、运行、电价与约束回到同一条运营工作流里。
+        </footer>
+    </main>
+</body>
+
+</html>

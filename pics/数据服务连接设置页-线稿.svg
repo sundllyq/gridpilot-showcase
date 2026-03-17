@@ -1,0 +1,113 @@
+<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+  <defs>
+    <linearGradient id="bg" x1="96" y1="72" x2="1504" y2="908" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#F2E6D7"/>
+    </linearGradient>
+    <linearGradient id="frame" x1="92" y1="94" x2="1508" y2="886" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F0"/>
+      <stop offset="1" stop-color="#F7EAD9"/>
+    </linearGradient>
+    <linearGradient id="sidebar" x1="108" y1="142" x2="348" y2="852" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4EBDD"/>
+      <stop offset="1" stop-color="#EFE1CF"/>
+    </linearGradient>
+    <style>
+      .ink { stroke: #47372B; }
+      .ink-fill { fill: #47372B; }
+      .muted { fill: #78695B; }
+      .hair { stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .line { stroke-width: 3.1; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .title { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 28px; font-weight: 700; }
+      .body { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 22px; font-weight: 600; }
+      .meta { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0.1em; }
+      .tiny { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 15px; font-weight: 500; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="980" rx="48" fill="url(#bg)"/>
+  <circle cx="1310" cy="122" r="96" fill="#FFFFFF" fill-opacity="0.5"/>
+  <circle cx="292" cy="846" r="130" fill="#E6D3C2" fill-opacity="0.22"/>
+
+  <rect x="102" y="104" width="1400" height="770" rx="34" fill="#5A4330" fill-opacity="0.055"/>
+  <rect x="96" y="96" width="1400" height="770" rx="34" fill="#5A4330" fill-opacity="0.03"/>
+  <rect x="90" y="88" width="1400" height="770" rx="34" fill="url(#frame)"/>
+  <rect x="90" y="88" width="1400" height="770" rx="34" class="ink line" fill-opacity="0"/>
+  <path d="M90 154H1490" class="ink hair"/>
+  <circle cx="132" cy="122" r="9" fill="#E28B5A"/>
+  <circle cx="160" cy="122" r="9" fill="#E3B266"/>
+  <circle cx="188" cy="122" r="9" fill="#8FA482"/>
+
+  <rect x="118" y="186" width="240" height="622" rx="28" fill="url(#sidebar)"/>
+  <rect x="118" y="186" width="240" height="622" rx="28" class="ink line" fill-opacity="0"/>
+  <rect x="148" y="222" width="104" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.18"/>
+  <rect x="148" y="252" width="152" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.1"/>
+  <rect x="146" y="314" width="182" height="54" rx="20" fill="#EBDACC"/>
+  <rect x="146" y="314" width="182" height="54" rx="20" class="ink hair" fill-opacity="0"/>
+  <text x="178" y="349" class="body ink-fill">服务商</text>
+  <rect x="146" y="392" width="164" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.08"/>
+  <rect x="146" y="432" width="150" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.08"/>
+  <rect x="146" y="472" width="128" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.08"/>
+  <rect x="146" y="736" width="58" height="58" rx="20" fill="#FFF6E8"/>
+  <rect x="146" y="736" width="58" height="58" rx="20" class="ink hair" fill-opacity="0"/>
+  <path d="M166 765H184" class="ink line"/>
+  <path d="M175 756V774" class="ink line"/>
+
+  <rect x="392" y="190" width="1064" height="190" rx="28" fill="#FFF8EF"/>
+  <rect x="392" y="190" width="1064" height="190" rx="28" class="ink line" fill-opacity="0"/>
+  <rect x="430" y="228" width="222" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.18"/>
+  <rect x="430" y="260" width="420" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.1"/>
+  <rect x="430" y="304" width="210" height="42" rx="21" fill="#FFF3E7"/>
+  <rect x="430" y="304" width="210" height="42" rx="21" class="ink hair" fill-opacity="0"/>
+  <text x="476" y="331" class="meta muted">CURRENT PROVIDER</text>
+  <rect x="1242" y="218" width="106" height="38" rx="19" fill="#ECE2D7"/>
+  <rect x="1242" y="218" width="106" height="38" rx="19" class="ink hair" fill-opacity="0"/>
+  <text x="1276" y="242" class="meta muted">默认</text>
+  <rect x="1324" y="292" width="96" height="42" rx="21" fill="#F9DDD5"/>
+  <rect x="1324" y="292" width="96" height="42" rx="21" class="ink hair" fill-opacity="0"/>
+  <text x="1352" y="319" class="meta" fill="#B04E42">已连接</text>
+  <rect x="430" y="314" width="214" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.14"/>
+  <rect x="430" y="338" width="276" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+
+  <rect x="392" y="414" width="1064" height="394" rx="30" fill="#FFF8EF"/>
+  <rect x="392" y="414" width="1064" height="394" rx="30" class="ink line" fill-opacity="0"/>
+  <rect x="430" y="452" width="164" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.18"/>
+  <rect x="430" y="482" width="302" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.1"/>
+
+  <g>
+    <circle cx="456" cy="548" r="16" fill="#FFF3E7"/>
+    <circle cx="456" cy="548" r="16" class="ink hair" fill-opacity="0"/>
+    <rect x="490" y="534" width="162" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.16"/>
+    <rect x="490" y="560" width="220" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="1320" y="528" width="90" height="40" rx="20" fill="#FFF3E7"/>
+    <rect x="1320" y="528" width="90" height="40" rx="20" class="ink hair" fill-opacity="0"/>
+    <text x="1350" y="553" class="meta muted">连接</text>
+  </g>
+  <g>
+    <circle cx="456" cy="622" r="16" fill="#FFF3E7"/>
+    <circle cx="456" cy="622" r="16" class="ink hair" fill-opacity="0"/>
+    <rect x="490" y="608" width="208" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.16"/>
+    <rect x="490" y="634" width="282" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="1320" y="602" width="90" height="40" rx="20" fill="#FFF3E7"/>
+    <rect x="1320" y="602" width="90" height="40" rx="20" class="ink hair" fill-opacity="0"/>
+    <text x="1350" y="627" class="meta muted">连接</text>
+  </g>
+  <g>
+    <circle cx="456" cy="696" r="16" fill="#FFF3E7"/>
+    <circle cx="456" cy="696" r="16" class="ink hair" fill-opacity="0"/>
+    <rect x="490" y="682" width="180" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.16"/>
+    <rect x="490" y="708" width="250" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="1320" y="676" width="90" height="40" rx="20" fill="#FFF3E7"/>
+    <rect x="1320" y="676" width="90" height="40" rx="20" class="ink hair" fill-opacity="0"/>
+    <text x="1350" y="701" class="meta muted">连接</text>
+  </g>
+  <g>
+    <circle cx="456" cy="770" r="16" fill="#FFF3E7"/>
+    <circle cx="456" cy="770" r="16" class="ink hair" fill-opacity="0"/>
+    <rect x="490" y="756" width="188" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.16"/>
+    <rect x="490" y="782" width="320" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="1320" y="750" width="90" height="40" rx="20" fill="#FFF3E7"/>
+    <rect x="1320" y="750" width="90" height="40" rx="20" class="ink hair" fill-opacity="0"/>
+    <text x="1350" y="775" class="meta muted">连接</text>
+  </g>
+</svg>

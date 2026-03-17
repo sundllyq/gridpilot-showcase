@@ -1,0 +1,232 @@
+<svg width="1600" height="1080" viewBox="0 0 1600 1080" fill="none" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+  <defs>
+    <linearGradient id="pageBg" x1="188" y1="108" x2="1412" y2="972" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFCF6"/>
+      <stop offset="1" stop-color="#F4E8D8"/>
+    </linearGradient>
+    <linearGradient id="frameFill" x1="96" y1="108" x2="1504" y2="984" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#F7ECDD"/>
+    </linearGradient>
+    <linearGradient id="sidebarFill" x1="108" y1="148" x2="344" y2="940" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4EBDD"/>
+      <stop offset="1" stop-color="#EFE1CF"/>
+    </linearGradient>
+    <linearGradient id="mainFill" x1="368" y1="148" x2="1188" y2="940" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFCF7"/>
+      <stop offset="1" stop-color="#F9F0E2"/>
+    </linearGradient>
+    <linearGradient id="panelFill" x1="1212" y1="148" x2="1498" y2="940" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBF3E6"/>
+      <stop offset="1" stop-color="#F2E4D4"/>
+    </linearGradient>
+    <linearGradient id="chartFill" x1="420" y1="302" x2="1140" y2="706" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF9F1"/>
+      <stop offset="1" stop-color="#F9EEDB"/>
+    </linearGradient>
+    <linearGradient id="inputFill" x1="420" y1="776" x2="1140" y2="888" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8EF"/>
+      <stop offset="1" stop-color="#F5E6D1"/>
+    </linearGradient>
+    <linearGradient id="pricePeak" x1="884" y1="388" x2="1068" y2="388" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7D3B5" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#BF6C34" stop-opacity="0.26"/>
+    </linearGradient>
+    <linearGradient id="priceValley" x1="506" y1="388" x2="726" y2="388" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DCE8D8" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#8EA586" stop-opacity="0.24"/>
+    </linearGradient>
+    <style>
+      .ink { stroke: #47372B; }
+      .ink-fill { fill: #47372B; }
+      .muted { fill: #7B6B5A; }
+      .hair { stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .line { stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .dash { stroke-dasharray: 12 12; }
+      .text-ui { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; }
+      .text-small { font-size: 20px; letter-spacing: 0.1em; font-weight: 600; }
+      .text-body { font-size: 28px; letter-spacing: 0.01em; font-weight: 600; }
+      .text-label { font-size: 16px; letter-spacing: 0.12em; font-weight: 600; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1080" rx="56" fill="url(#pageBg)"/>
+  <circle cx="1250" cy="240" r="120" fill="#FFFFFF" fill-opacity="0.4"/>
+  <circle cx="310" cy="912" r="148" fill="#E8D5C5" fill-opacity="0.2"/>
+  <rect x="84" y="108" width="1456" height="912" rx="40" fill="#5A4330" fill-opacity="0.055"/>
+  <rect x="76" y="96" width="1456" height="912" rx="40" fill="#5A4330" fill-opacity="0.03"/>
+  <rect x="72" y="84" width="1456" height="912" rx="40" fill="url(#frameFill)"/>
+  <rect x="72" y="84" width="1456" height="912" rx="40" class="ink line" fill-opacity="0"/>
+  <path d="M72 156H1528" class="ink hair"/>
+  <circle cx="116" cy="120" r="10" fill="#E28B5A"/>
+  <circle cx="148" cy="120" r="10" fill="#E3B266"/>
+  <circle cx="180" cy="120" r="10" fill="#8FA482"/>
+
+    <rect x="96" y="180" width="236" height="780" rx="28" fill="url(#sidebarFill)"/>
+    <rect x="96" y="180" width="236" height="780" rx="28" class="ink line" fill-opacity="0"/>
+    <rect x="120" y="212" width="58" height="58" rx="20" fill="#FFF6E9"/>
+    <rect x="120" y="212" width="58" height="58" rx="20" class="ink hair" fill-opacity="0"/>
+    <path d="M142 244C145.9 236.5 156.6 235.2 162.4 241.4C166.2 245.5 166.5 252 163.2 256.4C159.2 261.8 151.2 262.9 145.6 259" class="ink line"/>
+    <path d="M176 216V266" class="ink hair"/>
+    <rect x="204" y="216" width="92" height="14" rx="7" fill="#4C3B2E" fill-opacity="0.14"/>
+    <rect x="204" y="240" width="68" height="10" rx="5" fill="#4C3B2E" fill-opacity="0.1"/>
+
+    <rect x="120" y="292" width="188" height="50" rx="18" fill="#EEDFD0"/>
+    <rect x="120" y="292" width="188" height="50" rx="18" class="ink hair" fill-opacity="0"/>
+    <rect x="136" y="308" width="118" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.18"/>
+    <rect x="120" y="364" width="168" height="20" rx="10" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="404" width="150" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="444" width="160" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="484" width="132" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="524" width="154" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="564" width="174" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="604" width="148" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="644" width="164" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="684" width="142" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="724" width="158" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="120" y="904" width="56" height="56" rx="20" fill="#FFF6E9"/>
+    <rect x="120" y="904" width="56" height="56" rx="20" class="ink hair" fill-opacity="0"/>
+    <path d="M142 933H154" class="ink line"/>
+    <path d="M148 927V939" class="ink line"/>
+
+    <rect x="356" y="180" width="836" height="780" rx="32" fill="url(#mainFill)"/>
+    <rect x="356" y="180" width="836" height="780" rx="32" class="ink line" fill-opacity="0"/>
+    <rect x="390" y="214" width="162" height="36" rx="18" fill="#FFF5E8"/>
+    <rect x="390" y="214" width="162" height="36" rx="18" class="ink hair" fill-opacity="0"/>
+    <text x="416" y="237" class="text-ui text-small muted">NATURAL INPUT</text>
+    <rect x="882" y="218" width="256" height="54" rx="22" fill="#E8D5C5"/>
+    <rect x="882" y="218" width="256" height="54" rx="22" class="ink hair" fill-opacity="0"/>
+    <text x="936" y="251" class="text-ui text-body ink-fill">Ask once</text>
+
+    <rect x="418" y="300" width="728" height="414" rx="30" fill="#5A4330" fill-opacity="0.045"/>
+    <rect x="414" y="294" width="728" height="414" rx="30" fill="#5A4330" fill-opacity="0.02"/>
+    <rect x="410" y="290" width="728" height="414" rx="30" fill="url(#chartFill)"/>
+    <rect x="410" y="290" width="728" height="414" rx="30" class="ink line" fill-opacity="0"/>
+    <rect x="438" y="320" width="184" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.16"/>
+    <rect x="438" y="350" width="136" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.1"/>
+
+    <rect x="438" y="388" width="86" height="228" rx="10" fill="#F3E6D7"/>
+    <rect x="506" y="388" width="220" height="228" rx="10" fill="url(#priceValley)"/>
+    <rect x="726" y="388" width="156" height="228" rx="10" fill="#F0E6D9"/>
+    <rect x="882" y="388" width="186" height="228" rx="10" fill="url(#pricePeak)"/>
+    <rect x="1068" y="388" width="42" height="228" rx="10" fill="#F3E6D7"/>
+    <path d="M452 616H1104" class="ink hair"/>
+    <path d="M452 388V616" class="ink hair"/>
+    <path d="M452 442H1104" class="ink hair dash" opacity="0.55"/>
+    <path d="M452 496H1104" class="ink hair dash" opacity="0.55"/>
+    <path d="M452 550H1104" class="ink hair dash" opacity="0.55"/>
+    <path d="M520 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M588 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M656 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M724 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M792 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M860 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M928 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M996 388V616" class="ink hair dash" opacity="0.55"/>
+    <path d="M1064 388V616" class="ink hair dash" opacity="0.55"/>
+
+    <g opacity="0.9">
+      <rect x="544" y="474" width="14" height="108" rx="7" fill="#7088B6"/>
+      <rect x="564" y="474" width="14" height="108" rx="7" fill="#7088B6"/>
+      <rect x="584" y="474" width="14" height="108" rx="7" fill="#7088B6"/>
+      <rect x="604" y="474" width="14" height="108" rx="7" fill="#7088B6"/>
+      <rect x="624" y="474" width="14" height="108" rx="7" fill="#7088B6"/>
+      <rect x="666" y="530" width="14" height="52" rx="7" fill="#BF6C34"/>
+      <rect x="686" y="530" width="14" height="52" rx="7" fill="#BF6C34"/>
+      <rect x="706" y="530" width="14" height="52" rx="7" fill="#BF6C34"/>
+      <rect x="726" y="530" width="14" height="52" rx="7" fill="#BF6C34"/>
+      <rect x="792" y="446" width="14" height="136" rx="7" fill="#7088B6"/>
+      <rect x="812" y="446" width="14" height="136" rx="7" fill="#7088B6"/>
+      <rect x="832" y="446" width="14" height="136" rx="7" fill="#7088B6"/>
+      <rect x="852" y="446" width="14" height="136" rx="7" fill="#7088B6"/>
+      <rect x="872" y="446" width="14" height="136" rx="7" fill="#7088B6"/>
+      <rect x="938" y="510" width="14" height="72" rx="7" fill="#BF6C34"/>
+      <rect x="958" y="510" width="14" height="72" rx="7" fill="#BF6C34"/>
+      <rect x="978" y="510" width="14" height="72" rx="7" fill="#BF6C34"/>
+      <rect x="998" y="510" width="14" height="72" rx="7" fill="#BF6C34"/>
+      <rect x="1018" y="510" width="14" height="72" rx="7" fill="#BF6C34"/>
+    </g>
+
+    <path d="M452 448C480 444 505 442 526 444C550 446 570 448 592 446C614 444 632 440 652 456C672 472 692 508 714 510C736 512 756 470 778 474C800 478 818 560 838 566C858 572 880 548 902 534C924 520 942 508 962 500C982 492 1004 486 1028 490C1050 494 1076 496 1100 492" fill="none" stroke="#557DD9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M452 454C472 452 492 450 512 452C532 454 554 454 574 452C594 450 614 450 634 478C654 506 674 576 694 578C714 580 736 572 756 546C776 520 798 430 818 392C838 354 858 366 878 424C898 482 918 552 938 612" fill="none" stroke="#2A9D71" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="10 10"/>
+    <path d="M452 474C484 476 514 478 544 476C574 474 604 472 632 478C660 484 690 490 720 500C750 510 782 516 814 512C846 508 874 500 902 490C930 480 960 468 990 458C1020 448 1054 446 1100 448" fill="none" stroke="#BF6C34" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12 10"/>
+    <path d="M468 652H544" class="ink hair"/>
+    <path d="M582 652H658" class="ink hair"/>
+    <path d="M696 652H772" class="ink hair"/>
+    <path d="M810 652H886" class="ink hair"/>
+    <path d="M924 652H1000" class="ink hair"/>
+    <path d="M1038 652H1092" class="ink hair"/>
+
+    <rect x="438" y="644" width="92" height="34" rx="17" fill="#DDEAD9"/>
+    <rect x="438" y="644" width="92" height="34" rx="17" class="ink hair" fill-opacity="0"/>
+    <circle cx="466" cy="661" r="6" fill="#8EA586"/>
+    <text x="482" y="666" class="text-ui text-label muted">VALLEY</text>
+    <rect x="550" y="644" width="82" height="34" rx="17" fill="#ECE3D8"/>
+    <rect x="550" y="644" width="82" height="34" rx="17" class="ink hair" fill-opacity="0"/>
+    <circle cx="578" cy="661" r="6" fill="#A99784"/>
+    <text x="594" y="666" class="text-ui text-label muted">FLAT</text>
+    <rect x="652" y="644" width="88" height="34" rx="17" fill="#F6DEC7"/>
+    <rect x="652" y="644" width="88" height="34" rx="17" class="ink hair" fill-opacity="0"/>
+    <circle cx="680" cy="661" r="6" fill="#BF6C34"/>
+    <text x="696" y="666" class="text-ui text-label muted">PEAK</text>
+
+    <rect x="410" y="760" width="728" height="112" rx="28" fill="url(#inputFill)"/>
+    <rect x="410" y="760" width="728" height="112" rx="28" class="ink line" fill-opacity="0"/>
+    <rect x="438" y="788" width="314" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.12"/>
+    <rect x="438" y="826" width="192" height="14" rx="7" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="1048" y="792" width="54" height="54" rx="20" fill="#BF6C34"/>
+    <path d="M1074 805V833" stroke="#FFF9F2" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1062 821L1074 833L1086 821" stroke="#FFF9F2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="780" y="818" width="76" height="24" rx="12" fill="#E7D8C8"/>
+    <rect x="780" y="818" width="76" height="24" rx="12" class="ink hair" fill-opacity="0"/>
+    <text x="806" y="834" class="text-ui text-label muted">GLM</text>
+
+    <rect x="1208" y="180" width="296" height="780" rx="32" fill="url(#panelFill)"/>
+    <rect x="1208" y="180" width="296" height="780" rx="32" class="ink line" fill-opacity="0"/>
+    <rect x="1236" y="214" width="170" height="16" rx="8" fill="#4C3B2E" fill-opacity="0.18"/>
+    <rect x="1236" y="244" width="214" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.1"/>
+    <rect x="1236" y="286" width="110" height="34" rx="17" fill="#EEF4E9"/>
+    <rect x="1236" y="286" width="110" height="34" rx="17" class="ink hair" fill-opacity="0"/>
+    <text x="1260" y="307" class="text-ui text-label muted">GRID TAG</text>
+
+    <rect x="1236" y="342" width="238" height="96" rx="22" fill="#F5E9D8"/>
+    <rect x="1236" y="342" width="238" height="96" rx="22" class="ink hair" fill-opacity="0"/>
+    <rect x="1256" y="364" width="132" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.12"/>
+    <rect x="1256" y="390" width="174" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+    <rect x="1236" y="460" width="110" height="110" rx="22" fill="#FFF7EC"/>
+    <rect x="1236" y="460" width="110" height="110" rx="22" class="ink hair" fill-opacity="0"/>
+    <rect x="1364" y="460" width="110" height="110" rx="22" fill="#FFF7EC"/>
+    <rect x="1364" y="460" width="110" height="110" rx="22" class="ink hair" fill-opacity="0"/>
+    <rect x="1236" y="588" width="110" height="110" rx="22" fill="#FFF7EC"/>
+    <rect x="1236" y="588" width="110" height="110" rx="22" class="ink hair" fill-opacity="0"/>
+    <rect x="1364" y="588" width="110" height="110" rx="22" fill="#FFF7EC"/>
+    <rect x="1364" y="588" width="110" height="110" rx="22" class="ink hair" fill-opacity="0"/>
+    <text x="1260" y="500" class="text-ui text-label muted">KVA</text>
+    <text x="1388" y="500" class="text-ui text-label muted">KW</text>
+    <text x="1260" y="628" class="text-ui text-label muted">KWH</text>
+    <text x="1388" y="628" class="text-ui text-label muted">PV</text>
+    <text x="1258" y="548" class="text-ui text-body ink-fill">25,000</text>
+    <text x="1386" y="548" class="text-ui text-body ink-fill">20,070</text>
+    <text x="1258" y="676" class="text-ui text-body ink-fill">40,140</text>
+    <text x="1398" y="676" class="text-ui text-body ink-fill">0</text>
+
+    <rect x="1236" y="724" width="122" height="34" rx="17" fill="#EEF4E9"/>
+    <rect x="1236" y="724" width="122" height="34" rx="17" class="ink hair" fill-opacity="0"/>
+    <text x="1260" y="745" class="text-ui text-label muted">CONTEXT</text>
+    <rect x="1236" y="778" width="114" height="68" rx="20" fill="#FFF7EC"/>
+    <rect x="1236" y="778" width="114" height="68" rx="20" class="ink hair" fill-opacity="0"/>
+    <rect x="1362" y="778" width="114" height="68" rx="20" fill="#FFF7EC"/>
+    <rect x="1362" y="778" width="114" height="68" rx="20" class="ink hair" fill-opacity="0"/>
+    <text x="1258" y="804" class="text-ui text-label muted">GRIDID</text>
+    <text x="1386" y="804" class="text-ui text-label muted">EMSID</text>
+    <text x="1258" y="828" class="text-ui text-small muted">1120...</text>
+    <text x="1386" y="828" class="text-ui text-small muted">1000...</text>
+
+    <rect x="1236" y="866" width="116" height="34" rx="17" fill="#EEF4E9"/>
+    <rect x="1236" y="866" width="116" height="34" rx="17" class="ink hair" fill-opacity="0"/>
+    <text x="1258" y="887" class="text-ui text-label muted">LIMITS</text>
+    <rect x="1236" y="916" width="238" height="8" rx="4" fill="#4C3B2E" fill-opacity="0.12"/>
+
+    <path d="M1468 300V898" class="ink hair"/>
+    <rect x="1460" y="332" width="8" height="118" rx="4" fill="#D2B89F"/>
+</svg>

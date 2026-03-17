@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GridPilot 使用说明</title>
+<style>
+/* ── Variables (shared with gridpilot-showcase.html) ─────────────────────── */
+:root {
+  --bg: #f6efe5;
+  --bg-deep: #f0e6d9;
+  --surface: rgba(255, 251, 245, 0.82);
+  --surface-strong: #fffaf2;
+  --ink: #211a15;
+  --ink-soft: #2e241d;
+  --muted: #76695c;
+  --muted-2: #5d5147;
+  --line: rgba(63, 45, 28, 0.1);
+  --line-strong: rgba(63, 45, 28, 0.14);
+  --accent: #bf6c34;
+  --accent-soft: rgba(191, 108, 52, 0.12);
+  --accent-hover: #ad5f2d;
+  --shadow: 0 24px 80px -40px rgba(74, 49, 30, 0.3);
+  --shadow-sm: 0 18px 50px -36px rgba(74, 49, 30, 0.28);
+  --radius-xl: 2rem;
+  --radius-lg: 1.5rem;
+  --radius-md: 1.25rem;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  min-height: 100dvh;
+  color: var(--ink);
+  font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB",
+    "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.62), transparent 34%),
+    radial-gradient(circle at 86% 14%, rgba(191,108,52,0.08), transparent 22%),
+    linear-gradient(180deg, #f8f2e8 0%, var(--bg) 52%, var(--bg-deep) 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(33,26,21,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33,26,21,0.025) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at center, black 42%, transparent 100%);
+  opacity: 0.32;
+  z-index: 0;
+}
+
+::selection { background: rgba(191, 108, 52, 0.18); }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+.page { position: relative; max-width: 1480px; margin: 0 auto; padding: 20px 16px 80px; }
+
+@media (min-width: 640px) { .page { padding: 24px 24px 80px; } }
+@media (min-width: 1024px) { .page { padding: 32px 32px 80px; } }
+
+/* ── Topbar ──────────────────────────────────────────────────────────────── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line);
+  background: rgba(255,251,245,0.74);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+}
+
+.brand { display: flex; align-items: center; gap: 14px; }
+
+.brand-mark {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(255,255,255,0.75);
+  background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(250,240,228,0.88));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 20px 44px -24px rgba(102,68,42,0.34);
+  color: var(--accent);
+}
+
+.brand-sup { font-size: 11px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #8c7662; }
+.brand-title { font-size: 18px; font-weight: 600; letter-spacing: -0.03em; color: var(--ink); }
+
+.topnav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+.topnav a {
+  display: inline-flex; align-items: center;
+  min-height: 44px; padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,250,243,0.8);
+  font-size: 14px; font-weight: 500; color: #5a4a3d;
+  transition: transform 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.topnav a:hover { transform: translateY(-1px); border-color: rgba(191,108,52,0.26); color: var(--ink); }
+
+.topnav .btn-primary {
+  gap: 8px;
+  background: var(--accent); color: #fff7f0;
+  border-color: rgba(191,108,52,0.18);
+  font-weight: 600;
+  box-shadow: 0 18px 40px -24px rgba(120,67,28,0.5);
+}
+.topnav .btn-primary:hover { background: var(--accent-hover); }
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.layout {
+  display: grid; gap: 32px;
+  margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  .layout { grid-template-columns: 320px minmax(0, 1fr); }
+}
+@media (min-width: 1280px) {
+  .layout { grid-template-columns: 340px minmax(0, 1fr); }
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+.sidebar-wrap {
+  position: sticky; top: 24px; align-self: start;
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line);
+  background: rgba(255,251,245,0.8);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+}
+
+.sidebar {
+  padding: 24px;
+}
+
+.sidebar-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 999px;
+  border: 1px solid rgba(191,108,52,0.18);
+  background: rgba(255,248,241,0.84);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+}
+.sidebar-badge::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); }
+
+.sidebar-heading {
+  margin-top: 20px;
+  font-size: 2rem; font-weight: 600; line-height: 1; letter-spacing: -0.06em;
+  color: var(--ink);
+}
+.sidebar-heading span { display: block; color: #7a675a; }
+
+.sidebar-desc { margin-top: 16px; font-size: 14px; line-height: 1.8; color: #6f6257; }
+.sidebar-desc code { background: var(--accent-soft); padding: 1px 6px; border-radius: 6px; font-size: 0.92em; color: #8a4f25; }
+
+/* Quick access cards */
+.qa-grid { display: grid; gap: 12px; margin-top: 24px; }
+
+.qa-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px; border-radius: 1.4rem;
+  border: 1px solid rgba(63,45,28,0.09);
+  background: rgba(255,249,242,0.92);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.qa-card:hover { transform: translateY(-2px); border-color: rgba(191,108,52,0.22); box-shadow: 0 16px 40px -32px rgba(95,63,34,0.4); }
+
+.qa-icon {
+  flex-shrink: 0; width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 1rem; background: var(--accent-soft); color: var(--accent);
+}
+
+.qa-title { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; color: #2b211a; }
+.qa-desc { margin-top: 4px; font-size: 12px; line-height: 1.6; color: #7a6a5d; }
+
+/* Navigation */
+.nav-divider { margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(63,45,28,0.09); }
+.nav-heading { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8e7a6c; }
+
+.nav-toc { margin-top: 16px; padding-right: 4px; }
+.nav-group + .nav-group { margin-top: 20px; }
+.nav-group-title { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; color: #9f856f; }
+.nav-items { display: grid; gap: 6px; margin-top: 8px; }
+
+.nav-link {
+  display: block; padding: 8px 12px; border-radius: 12px;
+  font-size: 14px; color: #5d5046;
+  transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+.nav-link:hover { background: rgba(191,108,52,0.08); color: var(--ink); }
+.nav-link.active {
+  background: var(--accent-soft); color: var(--ink);
+  font-weight: 500;
+  box-shadow: inset 0 0 0 1px rgba(191,108,52,0.16);
+}
+
+/* ── Content area ────────────────────────────────────────────────────────── */
+.content { display: grid; gap: 32px; }
+
+/* Highlight cards row */
+.highlights { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 1280px) { .highlights { grid-template-columns: repeat(4, 1fr); } }
+
+.highlight-card {
+  padding: 20px; border-radius: 1.7rem;
+  border: 1px solid rgba(63,45,28,0.09);
+  background: rgba(255,250,245,0.78);
+  box-shadow: var(--shadow-sm);
+}
+.highlight-label { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #9a816d; }
+.highlight-value { margin-top: 12px; font-size: 1.75rem; font-weight: 600; letter-spacing: -0.05em; color: #241d18; }
+.highlight-note { margin-top: 12px; font-size: 14px; line-height: 1.7; color: #67594e; }
+
+/* Doc sections */
+.doc-section {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+  scroll-margin-top: 80px;
+}
+@media (min-width: 640px) { .doc-section { padding: 32px; } }
+
+.section-header {
+  display: flex; flex-direction: column; gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(63,45,28,0.09);
+}
+@media (min-width: 640px) {
+  .section-header { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+}
+
+.section-group-label { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #9c8067; }
+.section-title { margin-top: 12px; font-size: clamp(1.7rem, 3vw, 2.6rem); font-weight: 600; line-height: 1; letter-spacing: -0.05em; color: var(--ink); }
+.section-summary { margin-top: 16px; font-size: 14px; line-height: 1.7; color: #6a5d52; }
+
+.section-visual {
+  margin-top: 24px; overflow: hidden; border-radius: 1.7rem;
+  border: 1px solid rgba(255,255,255,0.75);
+  background: #fffaf4;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.76), 0 24px 70px -40px rgba(74,49,30,0.34);
+}
+.visual-eyebrow {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(63,45,28,0.08);
+  background: rgba(255,248,241,0.74);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #9f8269;
+}
+.section-visual img { width: 100%; height: auto; object-fit: cover; }
+
+/* ── Prose (rendered markdown) ───────────────────────────────────────────── */
+.prose { margin-top: 32px; }
+.prose h2 { margin-top: 40px; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.03em; color: var(--ink); scroll-margin-top: 96px; }
+.prose h3 { margin-top: 32px; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink-soft); }
+.prose h4 { margin-top: 24px; font-size: 1rem; font-weight: 600; color: var(--ink-soft); }
+.prose p { margin-top: 16px; font-size: 15px; line-height: 2; color: var(--muted-2); }
+.prose ul, .prose ol { margin-top: 16px; padding-left: 20px; font-size: 15px; line-height: 2; color: var(--muted-2); }
+.prose li { padding-left: 4px; }
+.prose li::marker { color: var(--accent); }
+
+.prose a {
+  font-weight: 500; color: #9e5627;
+  text-decoration: underline; text-decoration-color: #d7b293; text-underline-offset: 4px;
+  transition: color 150ms ease;
+}
+.prose a:hover { color: #7d421b; }
+
+.prose blockquote {
+  margin-top: 24px; padding: 16px 20px;
+  border-radius: var(--radius-lg); border: 1px solid #e2c9b1;
+  background: #fff9f2;
+  font-size: 15px; line-height: 1.8; color: #6d5f54;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.prose blockquote p { margin-top: 0; color: inherit; }
+.prose blockquote p + p { margin-top: 8px; }
+
+.prose hr { margin: 32px 0; border: none; border-top: 1px solid #e6d5c5; }
+
+.prose table {
+  margin-top: 24px; width: 100%; border-collapse: collapse;
+  font-size: 14px; color: #51453c;
+  border-radius: var(--radius-lg); overflow: hidden;
+  border: 1px solid #e5d0bd; background: #fffaf4;
+}
+.prose thead { background: rgba(191,108,52,0.08); color: #3d3027; }
+.prose th { padding: 12px 16px; font-weight: 600; white-space: nowrap; text-align: left; }
+.prose td { padding: 12px 16px; border-top: 1px solid #eadccf; vertical-align: top; }
+
+.prose pre {
+  margin-top: 24px; padding: 20px; overflow-x: auto;
+  border-radius: var(--radius-lg);
+  background: #221a15;
+  font-size: 14px; line-height: 1.8; color: #f7ead9;
+  box-shadow: 0 24px 70px -38px rgba(53,31,16,0.65);
+}
+
+.prose code {
+  padding: 2px 6px; border-radius: 6px;
+  background: var(--accent-soft);
+  font-size: 0.92em; color: #8a4f25;
+  font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+}
+.prose pre code { padding: 0; border-radius: 0; background: none; color: inherit; font-size: inherit; }
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.page-footer {
+  margin-top: 48px; padding: 28px 0;
+  text-align: center; font-size: 14px; color: var(--muted); line-height: 1.8;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(118,105,92,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(118,105,92,0.4); }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .sidebar-wrap { position: static; }
+  .topbar { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 639px) {
+  .highlights { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M232,48V192a8,8,0,0,1-8,8H160a32,32,0,0,0-32,32,32,32,0,0,0-32-32H32a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8H88a32,32,0,0,1,32,32v88a8,8,0,0,0,16,0V72a32,32,0,0,1,32-32h56A8,8,0,0,1,232,48Z" opacity="0.2"/><path d="M224,48H168a40,40,0,0,0-40,40,40,40,0,0,0-40-40H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H88a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM88,192H32V64H88a24,24,0,0,1,24,24V200A40,40,0,0,0,88,192Zm136,0H168a40,40,0,0,0-24,8V88a24,24,0,0,1,24-24h56Z"/></svg>
+      </div>
+      <div>
+        <p class="brand-sup">GridPilot Guide</p>
+        <p class="brand-title">安装、配置、使用与排障说明页</p>
+      </div>
+    </div>
+    <nav class="topnav" aria-label="页面导航">
+      <a href="#installation">先看安装</a>
+      <a href="#faq">常见问题</a>
+      <a href="gridpilot-showcase.html" class="btn-primary">
+        产品介绍
+        <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69l-58.35-58.34a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Layout -->
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar-wrap">
+      <div class="sidebar">
+        <div class="sidebar-badge">Answer Hub</div>
+
+        <h2 class="sidebar-heading">
+          GridPilot
+          <span>说明网址</span>
+        </h2>
+        <p class="sidebar-desc">
+          涵盖安装、配置、使用和排障的完整指南，帮你快速找到常见问题的答案。
+        </p>
+
+        <div class="qa-grid">
+
+            <a href="#installation" class="qa-card">
+              <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M232,48V192a8,8,0,0,1-8,8H160a32,32,0,0,0-32,32,32,32,0,0,0-32-32H32a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8H88a32,32,0,0,1,32,32v88a8,8,0,0,0,16,0V72a32,32,0,0,1,32-32h56A8,8,0,0,1,232,48Z" opacity="0.2"/><path d="M224,48H168a40,40,0,0,0-40,40,40,40,0,0,0-40-40H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H88a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM88,192H32V64H88a24,24,0,0,1,24,24V200A40,40,0,0,0,88,192Zm136,0H168a40,40,0,0,0-24,8V88a24,24,0,0,1,24-24h56Z"/></svg></div>
+              <div><p class="qa-title">怎么下载和安装</p><p class="qa-desc">平台要求、首次打开限制和启动向导一次讲清。</p></div>
+            </a>
+
+            <a href="#providers" class="qa-card">
+              <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M213.85,125.46l-112,120a8,8,0,0,1-13.69-7l14.66-73.33L45.19,143.49a8,8,0,0,1-3-13l112-120a8,8,0,0,1,13.69,7L153.18,90.9l57.63,21.61a8,8,0,0,1,3,12.95Z" opacity="0.2"/><path d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z"/></svg></div>
+              <div><p class="qa-title">AI 服务怎么配置</p><p class="qa-desc">服务商、模型分工、密钥排查都在这里。</p></div>
+            </a>
+
+            <a href="#mcp" class="qa-card">
+              <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M224,56V200a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8H216A8,8,0,0,1,224,56Z" opacity="0"/><path d="M176,88H152V16a8,8,0,0,0-16,0V88H120V16a8,8,0,0,0-16,0V88H80a8,8,0,0,0-8,8v48a72.08,72.08,0,0,0,56,70.21V240a8,8,0,0,0,16,0V214.21A72.08,72.08,0,0,0,200,144V96A8,8,0,0,0,192,88Zm-8,56a56,56,0,0,1-112,0V104H184Z"/></svg></div>
+              <div><p class="qa-title">数据服务怎么连接</p><p class="qa-desc">HTTP 地址、认证头和连接失败排查路径。</p></div>
+            </a>
+
+            <a href="#faq" class="qa-card">
+              <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z" opacity="0.2"/><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-1.22c17.76-4.3,32-18.49,32-34.78C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></div>
+              <div><p class="qa-title">用着不对怎么排查</p><p class="qa-desc">白屏、图表空白、超时、缓存、日志查看入口。</p></div>
+            </a>
+        </div>
+
+        <div class="nav-divider">
+          <p class="nav-heading">章节导航</p>
+          <nav class="nav-toc" aria-label="章节导航">
+
+        <div class="nav-group">
+          <p class="nav-group-title">总览</p>
+          <div class="nav-items">
+            <a href="#overview" class="nav-link" data-target="overview">GridPilot 文档总览</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-title">安装与上手</p>
+          <div class="nav-items">
+            <a href="#installation" class="nav-link" data-target="installation">安装指南</a>
+            <a href="#quickstart" class="nav-link" data-target="quickstart">快速开始</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-title">核心功能</p>
+          <div class="nav-items">
+            <a href="#conversations" class="nav-link" data-target="conversations">对话与会话管理</a>
+            <a href="#providers" class="nav-link" data-target="providers">AI 服务配置</a>
+            <a href="#mcp" class="nav-link" data-target="mcp">数据服务连接</a>
+            <a href="#visualization" class="nav-link" data-target="visualization">数据可视化</a>
+            <a href="#microgrid-panel" class="nav-link" data-target="microgrid-panel">微网上下文面板</a>
+            <a href="#settings" class="nav-link" data-target="settings">设置与个性化</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-title">领域理解</p>
+          <div class="nav-items">
+            <a href="#concepts" class="nav-link" data-target="concepts">核心概念</a>
+            <a href="#use-cases" class="nav-link" data-target="use-cases">使用场景</a>
+            <a href="#diagnosis-patterns" class="nav-link" data-target="diagnosis-patterns">智能诊断模式</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-title">常见问题</p>
+          <div class="nav-items">
+            <a href="#faq" class="nav-link" data-target="faq">常见问题</a>
+          </div>
+        </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Highlight cards -->
+      <div class="highlights">
+
+            <div class="highlight-card">
+              <p class="highlight-label">安装与启动</p>
+              <p class="highlight-value">3 类平台</p>
+              <p class="highlight-note">macOS、Windows、Linux 都有清晰安装步骤和首次打开说明。</p>
+            </div>
+
+            <div class="highlight-card">
+              <p class="highlight-label">业务能力</p>
+              <p class="highlight-value">9 个工具</p>
+              <p class="highlight-note">覆盖排程、运行、电价、负荷、回测和排程生成。</p>
+            </div>
+
+            <div class="highlight-card">
+              <p class="highlight-label">诊断方式</p>
+              <p class="highlight-value">7 种模式</p>
+              <p class="highlight-note">从排程查询到异常诊断、收益回测都可自然语言触发。</p>
+            </div>
+
+            <div class="highlight-card">
+              <p class="highlight-label">数据边界</p>
+              <p class="highlight-value">本地优先</p>
+              <p class="highlight-note">对话历史、缓存和统计默认保存在本机 ~/.gridpilot/。</p>
+            </div>
+      </div>
+
+      <!-- Sections -->
+
+      <section id="overview" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">总览</p>
+            <h3 class="section-title">GridPilot 文档总览</h3>
+            <p class="section-summary">先快速认识产品定位、能力范围和文档分区。</p>
+          </div>
+        </div>
+          <div class="section-visual">
+            <div class="visual-eyebrow">完整工作界面</div>
+            <img src="pics/完整工作界面.png" alt="GridPilot 完整工作界面截图" loading="lazy" />
+          </div>
+        <div class="prose"><p>GridPilot 是面向微网储能运营的 AI 助手桌面应用，通过自然语言实现排程查询、异常诊断、运行数据分析。</p>
+<hr>
+<h2>核心能力</h2>
+<ol>
+<li><strong>自然语言交互</strong> — 用日常语言提问，AI 自主推理、调取数据、给出结论</li>
+<li><strong>9 个专业查询分析工具</strong> — 覆盖排程、运行、电价、负荷、需量、微网档案、回测、排程生成</li>
+<li><strong>智能数据可视化</strong> — 电价色带、排程柱状图、功率曲线自动融合</li>
+<li><strong>本地优先</strong> — 数据存储在本地，不上传第三方</li>
+</ol>
+<hr>
+<h2>文档导航</h2>
+<h3>快速入门</h3>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#quickstart">快速开始</a></td>
+<td>5 分钟上手 GridPilot</td>
+</tr>
+<tr>
+<td><a href="#installation">安装指南</a></td>
+<td>下载安装、首次配置</td>
+</tr>
+</tbody></table>
+<h3>功能指南</h3>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#conversations">对话与会话管理</a></td>
+<td>对话交互模式与会话管理</td>
+</tr>
+<tr>
+<td><a href="#providers">AI 服务配置</a></td>
+<td>AI 服务商配置与切换</td>
+</tr>
+<tr>
+<td><a href="#mcp">数据服务连接</a></td>
+<td>储能数据服务连接与管理</td>
+</tr>
+<tr>
+<td><a href="#visualization">数据可视化</a></td>
+<td>图表系统与可视化说明</td>
+</tr>
+<tr>
+<td><a href="#microgrid-panel">微网上下文面板</a></td>
+<td>微网信息面板与快捷操作</td>
+</tr>
+<tr>
+<td><a href="#settings">设置与个性化</a></td>
+<td>外观、权限、语言等设置</td>
+</tr>
+</tbody></table>
+<h3>领域知识</h3>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#concepts">核心概念</a></td>
+<td>微网、排程、电价、单位换算等基础知识</td>
+</tr>
+<tr>
+<td><a href="#diagnosis-patterns">智能诊断模式</a></td>
+<td>AI 的 7 种诊断分析模式详解</td>
+</tr>
+<tr>
+<td><a href="#use-cases">使用场景</a></td>
+<td>典型使用场景与提问技巧</td>
+</tr>
+</tbody></table>
+<h3>帮助</h3>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#faq">常见问题</a></td>
+<td>安装、配置、使用问题解答</td>
+</tr>
+</tbody></table>
+<hr>
+<blockquote>
+<p>本文档提供详细使用指南，<code>README</code> 提供产品概览。</p>
+</blockquote>
+</div>
+      </section>
+
+      <section id="installation" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">安装与上手</p>
+            <h3 class="section-title">安装指南</h3>
+            <p class="section-summary">覆盖系统要求、各平台安装步骤与首次启动向导。</p>
+          </div>
+        </div>
+        <div class="prose"><h2>系统要求</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操作系统</td>
+<td>macOS 12+、Windows 10+、Linux</td>
+</tr>
+<tr>
+<td>磁盘空间</td>
+<td>~500MB</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>需要连接 AI 服务和储能数据后端</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>下载</h2>
+<p>前往发布页面，下载对应平台的安装包。</p>
+<hr>
+<h2>各平台安装步骤</h2>
+<h3>macOS</h3>
+<ol>
+<li>下载 <code>.dmg</code> 文件</li>
+<li>双击打开，将 GridPilot.app 拖入 Applications 文件夹</li>
+<li><strong>首次打开安全提示处理</strong>：macOS 可能提示&quot;无法验证开发者&quot;<ul>
+<li>打开「系统偏好设置 → 安全性与隐私 → 通用」</li>
+<li>点击「仍要打开」</li>
+</ul>
+</li>
+</ol>
+<h3>Windows</h3>
+<ol>
+<li>下载 <code>.exe</code> 安装包</li>
+<li>双击运行安装程序</li>
+<li>跟随安装向导完成安装</li>
+<li>在开始菜单中找到 GridPilot 并启动</li>
+</ol>
+<h3>Linux</h3>
+<ol>
+<li>下载 <code>.AppImage</code> 文件</li>
+<li>右键文件 → 属性 → 勾选&quot;允许执行&quot;（或在终端运行 <code>chmod +x GridPilot-*.AppImage</code>）</li>
+<li>双击运行</li>
+</ol>
+<hr>
+<h2>首次启动配置向导</h2>
+<p>首次启动时，应用会自动进入设置向导，引导完成以下配置：</p>
+<h3>步骤 1：配置 AI 服务</h3>
+<p>选择一个 AI 服务商并填入密钥。支持多个预设服务商，也可自定义。</p>
+<p>详细说明见 <a href="#providers">AI 服务配置</a>。</p>
+<h3>步骤 2：连接储能数据服务</h3>
+<p>填入储能数据服务的地址，建议使用 HTTP 方式接入。连接成功后，AI 就能查询排程、运行、电价等业务数据。</p>
+<p>详细说明见 <a href="#mcp">数据服务连接</a>。</p>
+<hr>
+<h2>数据存储</h2>
+<p>GridPilot 的本地数据（对话历史、缓存等）默认存储于：</p>
+<pre><code>~/.gridpilot/
+</code></pre>
+<p>所有数据保存在本地，不会上传到任何第三方服务。</p>
+<hr>
+<h2>卸载</h2>
+<ol>
+<li>删除应用本体（macOS 从 Applications 拖至废纸篓，Windows 通过控制面板卸载）</li>
+<li>如不需要保留历史数据，可删除数据目录 <code>~/.gridpilot/</code></li>
+</ol>
+<hr>
+<h2>相关链接</h2>
+<ul>
+<li><a href="#quickstart">快速开始</a> — 完成安装后立即上手</li>
+<li><a href="#providers">AI 服务配置</a> — 配置 AI 服务商</li>
+<li><a href="#faq">常见问题</a> — 安装常见问题解答</li>
+</ul>
+</div>
+      </section>
+
+      <section id="quickstart" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">安装与上手</p>
+            <h3 class="section-title">快速开始</h3>
+            <p class="section-summary">用三步完成 AI 服务、数据服务和首次提问。</p>
+          </div>
+        </div>
+        <div class="prose"><p>本文档帮助你在 5 分钟内完成 GridPilot 的基本配置并发起第一次对话。</p>
+<hr>
+<h2>前提条件</h2>
+<ul>
+<li><strong>操作系统</strong>：macOS 12+ 或 Windows 10+</li>
+<li><strong>网络连接</strong>：需要能访问 AI 服务和储能数据后端</li>
+</ul>
+<hr>
+<h2>三步配置</h2>
+<h3>第一步：配置 AI 服务</h3>
+<p>首次启动应用时，设置向导会引导你完成配置：</p>
+<ol>
+<li>进入「设置 → AI 服务管理」</li>
+<li>从内置的服务商列表中选择一个（如 Anthropic、通义千问、DeepSeek 等）</li>
+<li>填入对应的密钥（API Key）</li>
+<li>点击「激活」</li>
+</ol>
+<h3>第二步：连接储能数据服务</h3>
+<p>进入「设置 → 数据服务管理」→「添加」：</p>
+<ol>
+<li>连接方式选择 <strong>HTTP</strong></li>
+<li>填入数据服务地址，例如：<pre><code>https://algo-ai-toolkit-api.starcharge.com/starmcp/energy/mcp/
+</code></pre>
+</li>
+<li>点击保存，确认状态为「已连接」</li>
+</ol>
+<blockquote>
+<p>连接成功后，AI 就能查询排程、运行数据、电价等储能业务数据了。</p>
+</blockquote>
+<h3>第三步：开始提问</h3>
+<p>在对话框中输入你的问题，例如：</p>
+<pre><code>查一下惠州微网今天的排程
+</code></pre>
+<p>AI 会自动执行以下步骤：</p>
+<ol>
+<li>模糊匹配&quot;惠州&quot;找到对应微网</li>
+<li>调取排程数据</li>
+<li>调取电价数据（用于色带背景）</li>
+<li>生成排程柱状图 + 电价色带可视化</li>
+<li>给出文字分析结论</li>
+</ol>
+<hr>
+<h2>更多示例查询</h2>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>触发的分析类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>今天排程执行得怎么样？</td>
+<td>排程 vs 实际对比</td>
+</tr>
+<tr>
+<td>下午峰段为什么没放电？</td>
+<td>异常诊断</td>
+</tr>
+<tr>
+<td>看看明天的负荷预测准不准</td>
+<td>负荷验证</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>下一步</h2>
+<ul>
+<li><a href="#installation">安装指南</a> — 了解完整安装流程和平台细节</li>
+<li><a href="#providers">AI 服务配置</a> — 配置更多 AI 服务商或切换模型</li>
+<li><a href="#mcp">数据服务连接</a> — 深入了解数据服务连接方式</li>
+<li><a href="#concepts">核心概念</a> — 了解微网、排程、电价的领域知识</li>
+<li><a href="#faq">常见问题</a> — 遇到问题时查阅</li>
+</ul>
+</div>
+      </section>
+
+      <section id="conversations" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">核心功能</p>
+            <h3 class="section-title">对话与会话管理</h3>
+            <p class="section-summary">了解对话创建、模型切换、权限控制与上下文持久化。</p>
+          </div>
+        </div>
+        <div class="prose"><h2>创建与管理对话</h2>
+<p>应用左侧为对话列表面板，支持以下操作：</p>
+<ul>
+<li><strong>新建对话</strong>：点击左上角&quot;+&quot;按钮，创建新的对话会话</li>
+<li><strong>归档对话</strong>：右键点击对话条目，选择&quot;归档&quot;，将不常用的对话移出主列表</li>
+<li><strong>删除对话</strong>：右键点击对话条目，选择&quot;删除&quot;，永久移除该对话及其所有消息</li>
+</ul>
+<p>每条对话可以绑定一个微网，切换对话时右侧面板随之切换到对应微网的信息。</p>
+<hr>
+<h2>AI 智能分析流程</h2>
+<p>当你在对话中提出问题时，AI 会按照以下流程自动完成分析：</p>
+<pre><code>你提出问题
+   ↓
+AI 理解意图，制定分析计划
+   ↓
+AI 自动选择合适的查询分析工具（可能多个）
+   ↓
+工具执行（调取排程、运行数据、电价等）
+   ↓
+AI 综合数据，生成分析结论
+   ↓
+返回结果 + 自动生成可视化图表
+</code></pre>
+<p>AI 会根据问题复杂度自动编排查询顺序。例如异常诊断时会同时调取排程、运行数据和电价信息，然后叠加为复合图表。</p>
+<hr>
+<h2>权限控制</h2>
+<p>为保证安全，AI 在执行数据查询前会依据当前权限确认设置决定是否需要你确认。</p>
+<h3>权限确认方式</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>说明</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认确认</td>
+<td>工具请求权限时弹出确认，可选择允许一次或拒绝</td>
+<td>日常使用、需要逐次确认时</td>
+</tr>
+<tr>
+<td>本次会话允许</td>
+<td>部分操作会提供“本次会话允许”，减少同一会话中的重复确认</td>
+<td>连续分析同一问题时</td>
+</tr>
+<tr>
+<td>自动批准所有操作</td>
+<td>在设置页开启后跳过权限检查，仅适用于受信任任务</td>
+<td>批量分析、完全信任当前任务时</td>
+</tr>
+</tbody></table>
+<p>需要确认时，界面会展示即将执行的操作和参数。根据当前操作类型，你可以选择<strong>允许一次</strong>、<strong>本次会话允许</strong>或<strong>拒绝</strong>。</p>
+<p>自动批准开关可在设置页调整，详见 <a href="#settings">设置与个性化</a>。</p>
+<hr>
+<h2>AI 模型切换</h2>
+<p>对话界面顶部工具栏提供模型和服务商下拉菜单，可在对话过程中随时切换：</p>
+<ul>
+<li>切换后新发送的消息使用新模型，已发送的消息不受影响</li>
+<li>切换不会中断当前会话上下文</li>
+</ul>
+<p>可用的服务商和模型取决于已配置并激活的服务商，详见 <a href="#providers">AI 服务配置</a>。</p>
+<hr>
+<h2>会话恢复</h2>
+<p>对话上下文会持久化保存到本地：</p>
+<ul>
+<li>关闭应用后重新打开，历史对话完整保留</li>
+<li>微网上下文随会话一起保存</li>
+<li>重新打开历史对话可直接继续提问，AI 能感知之前讨论的上下文</li>
+</ul>
+<hr>
+<h2>富文本展示</h2>
+<p>AI 的回复支持丰富的格式展示：</p>
+<ul>
+<li>标题、列表、表格、代码块</li>
+<li>数字和数据以高亮格式展示</li>
+<li>工具调用结果卡片（可折叠展开，查看详细数据）</li>
+<li>图表组件内嵌在消息流中</li>
+</ul>
+<hr>
+<h2>实时响应</h2>
+<p>AI 回复采用流式推送，体验更流畅：</p>
+<ul>
+<li>文字内容逐步显示，无需等待完整回复</li>
+<li>工具调用过程实时展示（可看到 AI 正在调用哪个工具）</li>
+<li>图表在数据就绪后立即渲染，不阻塞文字输出</li>
+</ul>
+<hr>
+<h2>微网上下文跟随</h2>
+<p>对话中一旦提及微网名称或 AI 获取到微网数据，右侧面板会自动切换到该微网的信息视图，无需手动操作。</p>
+<p>支持模糊匹配（如输入&quot;惠州&quot;会自动定位到对应微网），详见 <a href="#microgrid-panel">微网上下文面板</a>。</p>
+<hr>
+<h2>相关链接</h2>
+<ul>
+<li><a href="#providers">AI 服务配置</a> — 配置和管理 AI 服务商</li>
+<li><a href="#mcp">数据服务连接</a> — 了解数据查询工具</li>
+<li><a href="#settings">设置与个性化</a> — 权限确认等全局设置</li>
+</ul>
+</div>
+      </section>
+
+      <section id="providers" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">核心功能</p>
+            <h3 class="section-title">AI 服务配置</h3>
+            <p class="section-summary">配置多家 AI 服务商、模型分工与切换方式。</p>
+          </div>
+        </div>
+        <div class="prose"><p>GridPilot 支持多个国内外 AI 服务商，你可以根据需求选择最合适的 AI 服务。</p>
+<hr>
+<h2>支持的 AI 服务商</h2>
+<p>以下为内置预设服务商：</p>
+<table>
+<thead>
+<tr>
+<th>服务商</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Anthropic</td>
+<td>Claude 系列模型官方服务</td>
+</tr>
+<tr>
+<td>Anthropic 第三方代理</td>
+<td>通过第三方地址使用 Claude 模型</td>
+</tr>
+<tr>
+<td>OpenRouter</td>
+<td>聚合多种 AI 模型的统一入口</td>
+</tr>
+<tr>
+<td>智谱 GLM（国内）</td>
+<td>国内版智谱大模型</td>
+</tr>
+<tr>
+<td>智谱 GLM（国际）</td>
+<td>国际版智谱大模型</td>
+</tr>
+<tr>
+<td>Kimi</td>
+<td>月之暗面 Kimi 模型</td>
+</tr>
+<tr>
+<td>火山引擎</td>
+<td>字节跳动旗下 AI 服务</td>
+</tr>
+<tr>
+<td>阿里云百炼</td>
+<td>阿里云 AI 平台</td>
+</tr>
+<tr>
+<td>AWS Bedrock</td>
+<td>亚马逊云托管的 AI 服务</td>
+</tr>
+<tr>
+<td>Google Vertex</td>
+<td>谷歌云托管的 AI 服务</td>
+</tr>
+<tr>
+<td>自定义（OpenAI 兼容）</td>
+<td>适配 OpenAI 格式的其他服务</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>添加 AI 服务</h2>
+<ol>
+<li>打开 <strong>设置</strong> → <strong>AI 服务管理</strong></li>
+<li>点击 <strong>添加服务商</strong></li>
+<li>从下拉列表选择一个预设服务商，或选择「自定义」</li>
+<li>填入密钥（API Key 或授权令牌，根据服务商要求）</li>
+<li>点击 <strong>保存</strong></li>
+<li>在列表中找到该服务商，点击 <strong>激活</strong> 设为当前默认</li>
+</ol>
+<p>同一时刻只有一个服务商处于激活状态，但可以在对话界面顶部随时切换。</p>
+<hr>
+<h2>选择不同场景使用的 AI 模型</h2>
+<p>每个服务商可以为不同的任务类型分配不同的模型，实现效果和成本的平衡：</p>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>说明</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>日常对话</td>
+<td>大多数提问使用的默认模型</td>
+<td>选择综合能力较强的模型</td>
+</tr>
+<tr>
+<td>复杂推理</td>
+<td>多步诊断、深度分析等复杂任务</td>
+<td>选择推理能力更强的模型</td>
+</tr>
+<tr>
+<td>简单查询</td>
+<td>快速回答、简单查询</td>
+<td>选择轻量模型，降低成本</td>
+</tr>
+</tbody></table>
+<p>在服务商编辑页的&quot;模型配置&quot;区域可以设置各类型对应的模型。</p>
+<hr>
+<h2>常见问题</h2>
+<h3>连接失败</h3>
+<ol>
+<li><strong>检查密钥是否正确</strong>：复制时避免多余空格</li>
+<li><strong>检查网络连通性</strong>：部分海外服务商在国内需要代理</li>
+<li><strong>确认账户余额</strong>：确认服务商账户有足够额度</li>
+<li><strong>确认模型可用</strong>：确认所选模型在该服务商下确实存在</li>
+</ol>
+<h3>切换服务商后模型不可用</h3>
+<p>不同服务商支持的模型不同，切换后需要在模型配置中重新选择对应的模型。</p>
+<hr>
+<h2>相关链接</h2>
+<ul>
+<li><a href="#conversations">对话</a> — 对话中实时切换服务商和模型</li>
+<li><a href="#mcp">数据服务连接</a> — 储能数据服务配置</li>
+<li><a href="#settings">设置与个性化</a> — 完整设置说明</li>
+</ul>
+</div>
+      </section>
+
+      <section id="mcp" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">核心功能</p>
+            <h3 class="section-title">数据服务连接</h3>
+            <p class="section-summary">连接储能数据服务，让 AI 能查询业务数据。</p>
+          </div>
+        </div>
+          <div class="section-visual">
+            <div class="visual-eyebrow">MCP 服务器配置</div>
+            <img src="pics/MCP配置.png" alt="GridPilot MCP 服务器配置界面截图" loading="lazy" />
+          </div>
+        <div class="prose"><p>GridPilot 的 AI 需要连接储能数据服务，才能查询排程、运行数据、电价、负荷等业务信息。本文说明如何配置数据服务连接。</p>
+<hr>
+<h2>连接方式</h2>
+<h3>HTTP 连接（推荐）</h3>
+<p>适用于团队共享的远程数据服务，无需在本机安装任何依赖。</p>
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>打开 <strong>设置</strong> → <strong>数据服务管理</strong></li>
+<li>点击 <strong>添加</strong></li>
+<li>连接方式选择 <strong>HTTP</strong></li>
+<li>填写数据服务地址，例如：<pre><code>https://algo-ai-toolkit-api.starcharge.com/starmcp/energy/mcp/
+</code></pre>
+</li>
+<li>如需认证信息，在 Headers 中填写（向管理员获取）</li>
+<li>点击 <strong>保存</strong></li>
+</ol>
+<p>连接成功后，工具列表会自动加载，显示可用的查询分析工具。</p>
+<h3>其他连接方式</h3>
+<p>GridPilot 还支持 SSE 和本地进程两种连接方式，适用于特殊部署场景。如需使用，请联系技术支持。</p>
+<hr>
+<h2>连接成功后</h2>
+<p>连接成功后，AI 会自动获得以下查询分析能力：</p>
+<ul>
+<li>查询排程计划</li>
+<li>查询实际运行数据</li>
+<li>查询电价时段</li>
+<li>查询负荷数据（实际和预测）</li>
+<li>查询微网基础信息</li>
+<li>查询需量数据</li>
+<li>收益回测模拟</li>
+<li>生成排程方案</li>
+</ul>
+<p>你不需要关心这些工具的技术细节——只要用自然语言提问，AI 会自动选择合适的工具组合来回答你。</p>
+<hr>
+<h2>管理界面</h2>
+<p><strong>设置</strong> → <strong>数据服务管理</strong> 页面展示所有已配置的数据服务：</p>
+<ul>
+<li>查看连接状态（已连接 / 连接中 / 连接失败）</li>
+<li>查看该服务提供的工具数量</li>
+<li>编辑或删除已有配置</li>
+<li>添加新的数据服务</li>
+</ul>
+<hr>
+<h2>故障排除</h2>
+<h3>连接失败</h3>
+<ul>
+<li>确认服务地址填写正确（可向管理员确认）</li>
+<li>检查认证信息是否有效</li>
+<li>确认当前网络能访问该地址（内网服务可能需要 VPN）</li>
+</ul>
+<h3>查询超时</h3>
+<ul>
+<li>检查本地网络连接</li>
+<li>数据服务后端可能暂时繁忙，稍后重试</li>
+<li>对于大时间范围查询，尝试缩短查询时段</li>
+</ul>
+<hr>
+<h2>相关链接</h2>
+<ul>
+<li><a href="#conversations">对话</a> — 了解 AI 如何自动编排工具</li>
+<li><a href="#settings">设置与个性化</a> — 数据服务管理入口</li>
+</ul>
+</div>
+      </section>
+
+      <section id="visualization" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">核心功能</p>
+            <h3 class="section-title">数据可视化</h3>
+            <p class="section-summary">理解电价色带、排程柱状图和复合图的呈现逻辑。</p>
+          </div>
+        </div>
+          <div class="section-visual">
+            <div class="visual-eyebrow">排程与实际复合图</div>
+            <img src="pics/排程与实际负荷图.png" alt="GridPilot 排程与实际负荷复合图截图" loading="lazy" />
+          </div>
+        <div class="prose"><p>GridPilot 内置了专为储能运营设计的可视化系统。AI 查询数据后，自动生成专业图表，帮助你直观理解排程、运行、电价和负荷数据。</p>
+<h2>电价色带系统</h2>
+<p>所有图表都支持电价色带背景，用颜色直观区分不同电价时段：</p>
+<table>
+<thead>
+<tr>
+<th>电价类型</th>
+<th>颜色</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>深谷</td>
+<td>蓝色</td>
+<td>最低电价时段</td>
+</tr>
+<tr>
+<td>谷</td>
+<td>绿色</td>
+<td>低电价时段</td>
+</tr>
+<tr>
+<td>平</td>
+<td>灰色</td>
+<td>正常电价</td>
+</tr>
+<tr>
+<td>峰</td>
+<td>橙色</td>
+<td>高电价时段</td>
+</tr>
+<tr>
+<td>峰尖</td>
+<td>红色</td>
+<td>最高电价</td>
+</tr>
+</tbody></table>
+<p>AI 在查询排程、运行数据或负荷时，会<strong>自动同时获取电价数据</strong>，确保图表始终包含电价色带背景。</p>
+<h2>图表类型</h2>
+<h3>1. 排程柱状图</h3>
+<p>展示储能系统的充放电排程计划，15 分钟颗粒度：</p>
+<ul>
+<li><strong>充电</strong>：蓝色柱体向上</li>
+<li><strong>放电</strong>：橙色柱体向下</li>
+<li>叠加电价色带，可直观看出&quot;谷充峰放&quot;策略</li>
+</ul>
+<h3>2. 实际功率曲线</h3>
+<p>展示储能系统的实际充放电功率：</p>
+<ul>
+<li>紫色实线</li>
+<li>充电为正值，放电为负值</li>
+</ul>
+<h3>3. SOC 曲线</h3>
+<p>展示电池荷电状态变化：</p>
+<ul>
+<li>绿色虚线</li>
+<li>范围 0%~100%</li>
+</ul>
+<h3>4. 排程 vs 实际叠加图</h3>
+<p>排程柱状图与实际功率曲线叠加在同一图表中：</p>
+<ul>
+<li>排程柱体显示计划</li>
+<li>紫色曲线显示实际</li>
+<li>偏差一目了然</li>
+</ul>
+<h3>5. 负荷对比图</h3>
+<p>实际负荷与预测负荷的双线对比：</p>
+<ul>
+<li><strong>实际负荷</strong>：蓝色实线</li>
+<li><strong>预测负荷</strong>：琥珀色虚线</li>
+<li>用于评估负荷预测准确性</li>
+</ul>
+<h3>6. 需量线图</h3>
+<p>展示微网需量变化及阈值：</p>
+<ul>
+<li>需量线：红色实线</li>
+<li>变压器容量阈值：红色虚线</li>
+<li>超过阈值的区域高亮显示</li>
+</ul>
+<h2>一图看清全貌</h2>
+<p>当 AI 在一次回答中查询了多种数据时，系统会自动将结果叠加为复合图表，你不需要在多个窗口之间来回切换：</p>
+<table>
+<thead>
+<tr>
+<th>你的问题类型</th>
+<th>图表自动融合效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>异常诊断（&quot;为什么没放电&quot;）</td>
+<td>排程柱 + 实际功率线 + 电价色带</td>
+</tr>
+<tr>
+<td>完整运行分析</td>
+<td>排程柱 + 功率线 + 负荷线 + 电价色带</td>
+</tr>
+<tr>
+<td>排程查询</td>
+<td>排程柱 + 电价色带</td>
+</tr>
+<tr>
+<td>负荷预测验证</td>
+<td>实际负荷 + 预测负荷 + 电价色带</td>
+</tr>
+<tr>
+<td>需量诊断</td>
+<td>需量线 + 变压器容量阈值</td>
+</tr>
+<tr>
+<td>收益回测</td>
+<td>回测结果 + 电价色带</td>
+</tr>
+</tbody></table>
+<p><strong>你只要问对问题，AI 会获取合适的数据组合，系统自动生成最佳图表。</strong></p>
+<h2>图表交互</h2>
+<ul>
+<li><strong>悬停查看详情</strong>：鼠标悬停查看具体时刻的数值</li>
+<li><strong>图例切换</strong>：点击图例可显示/隐藏对应数据层</li>
+</ul>
+<h2>相关文档</h2>
+<ul>
+<li><a href="#diagnosis-patterns">智能诊断模式</a> — 了解不同场景的数据组合</li>
+<li><a href="#overview">返回文档首页</a></li>
+</ul>
+</div>
+      </section>
+
+      <section id="microgrid-panel" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">核心功能</p>
+            <h3 class="section-title">微网上下文面板</h3>
+            <p class="section-summary">查看当前微网约束、标识信息和快捷操作入口。</p>
+          </div>
+        </div>
+          <div class="section-visual">
+            <div class="visual-eyebrow">微网上下文面板</div>
+            <img src="pics/微网上下文面板.png" alt="GridPilot 微网上下文面板截图" loading="lazy" />
+          </div>
+        <div class="prose"><p>微网上下文面板位于应用右侧，实时展示当前对话涉及的微网概览信息和快捷操作入口。</p>
+<h2>面板内容</h2>
+<h3>微网信息卡片</h3>
+<p>显示当前微网的基础信息：</p>
+<ul>
+<li><strong>微网名称</strong>和所在位置（省/市/区）</li>
+<li>微网标识编号</li>
+<li>同步时间</li>
+</ul>
+<h3>物理约束参数</h3>
+<p>以小卡片形式展示关键约束参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>变压器容量</td>
+<td>微网接入电网的容量上限 (kVA)</td>
+</tr>
+<tr>
+<td>ESS 额定功率</td>
+<td>储能系统最大充放电功率 (kW)</td>
+</tr>
+<tr>
+<td>ESS 额定容量</td>
+<td>储能系统总容量 (kWh)</td>
+</tr>
+<tr>
+<td>SOC 范围</td>
+<td>电池安全运行区间</td>
+</tr>
+<tr>
+<td>超容限值</td>
+<td>防超容上下限 (kVA)</td>
+</tr>
+<tr>
+<td>逆流限值</td>
+<td>防逆流上下限 (kVA)</td>
+</tr>
+<tr>
+<td>光伏装机</td>
+<td>光伏总功率 (kW)</td>
+</tr>
+</tbody></table>
+<h3>快捷操作按钮</h3>
+<p>面板提供一组快捷查询按钮，点击后自动在对话中发送对应查询：</p>
+<ul>
+<li><strong>查今日排程</strong> — 查询当前微网今日排程计划</li>
+<li><strong>查运行数据</strong> — 查询当前微网实时运行情况</li>
+<li><strong>查电价</strong> — 查询当前微网今日电价</li>
+<li><strong>查负荷</strong> — 查询负荷数据</li>
+<li><strong>排程 vs 实际</strong> — 对比排程计划与实际执行</li>
+</ul>
+<p>无需手动输入，一键即可发起常用查询。</p>
+<h2>上下文自动跟随</h2>
+<p>面板具备<strong>自动跟随</strong>机制：</p>
+<ol>
+<li>对话中 AI 获取到微网数据时，面板自动切换到该微网</li>
+<li>无需手动选择，提问即跟随</li>
+<li>切换对话时，面板也会切换到该对话关联的微网</li>
+</ol>
+<h2>微网名称模糊匹配</h2>
+<p>你不需要记住微网的技术编号，直接在对话中输入微网名称的关键词即可。例如：</p>
+<ul>
+<li>输入&quot;惠州&quot; → AI 自动匹配到&quot;惠州XX微网&quot;</li>
+<li>输入&quot;深圳龙岗&quot; → 匹配到对应微网</li>
+</ul>
+<h2>面板调整</h2>
+<ul>
+<li><strong>宽度</strong>：面板宽度可拖拽调整</li>
+<li><strong>持久化</strong>：宽度设置自动保存，下次打开保持不变</li>
+<li><strong>显示/隐藏</strong>：可通过导航栏切换面板显示状态</li>
+</ul>
+<h2>相关文档</h2>
+<ul>
+<li><a href="#conversations">对话</a> — 对话交互模式</li>
+<li><a href="#concepts">核心概念</a> — 微网、物理约束等概念</li>
+<li><a href="#overview">返回文档首页</a></li>
+</ul>
+</div>
+      </section>
+
+      <section id="settings" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">核心功能</p>
+            <h3 class="section-title">设置与个性化</h3>
+            <p class="section-summary">管理主题、语言、权限确认和本地使用统计。</p>
+          </div>
+        </div>
+        <div class="prose"><p>GridPilot 提供丰富的个性化选项，帮助你根据使用习惯调整应用行为。</p>
+<h2>通用设置</h2>
+<h3>默认模型</h3>
+<p>选择 AI 使用的默认模型。也可以在对话界面顶部随时切换。</p>
+<h3>数据存储</h3>
+<ul>
+<li>默认存储位置：<code>~/.gridpilot/</code></li>
+<li>包含对话历史、查询缓存等数据</li>
+<li>所有数据保存在本地，不上传第三方</li>
+</ul>
+<h2>AI 服务管理</h2>
+<p>管理 AI 服务商的连接配置，支持多个预设服务商。</p>
+<p>详见 <a href="#providers">AI 服务配置</a>。</p>
+<h2>数据服务管理</h2>
+<p>管理储能数据服务的连接，支持 HTTP 等多种连接方式。</p>
+<p>详见 <a href="#mcp">数据服务连接</a>。</p>
+<h2>外观设置</h2>
+<h3>主题切换</h3>
+<ul>
+<li><strong>浅色模式</strong>：适合白天使用</li>
+<li><strong>深色模式</strong>：适合夜间使用，减轻视觉疲劳</li>
+</ul>
+<h2>权限确认</h2>
+<p>控制 AI 执行工具操作时的确认行为：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认确认</td>
+<td>工具请求权限时弹出确认对话框</td>
+</tr>
+<tr>
+<td>自动批准所有操作</td>
+<td>开启后跳过权限检查，仅适用于受信任任务</td>
+</tr>
+</tbody></table>
+<p>部分对话内权限请求还会提供“本次会话允许”，可临时减少重复确认。</p>
+<h2>语言设置</h2>
+<p>GridPilot 支持界面语言切换：</p>
+<ul>
+<li><strong>中文</strong>（默认）</li>
+<li><strong>English</strong></li>
+</ul>
+<p>切换语言后界面即时更新，无需重启。</p>
+<h2>使用统计</h2>
+<p>在设置中可以查看使用统计数据：</p>
+<ul>
+<li><strong>Token 用量</strong>：各模型的资源消耗量</li>
+<li><strong>工具调用次数</strong>：各查询工具的使用统计</li>
+<li><strong>按会话统计</strong>：每个对话的资源消耗</li>
+<li><strong>按天统计</strong>：每日使用趋势</li>
+</ul>
+<p>统计数据仅保存在本地，不上传到任何外部服务。</p>
+<h2>相关文档</h2>
+<ul>
+<li><a href="#providers">AI 服务配置</a> — AI 服务商详细设置</li>
+<li><a href="#mcp">数据服务连接</a> — 数据服务管理</li>
+<li><a href="#overview">返回文档首页</a></li>
+</ul>
+</div>
+      </section>
+
+      <section id="concepts" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">领域理解</p>
+            <h3 class="section-title">核心概念</h3>
+            <p class="section-summary">补足微网、排程、电价时段与单位换算基础。</p>
+          </div>
+        </div>
+        <div class="prose"><p>本文介绍 GridPilot 涉及的储能领域核心概念，帮助你快速理解系统中的关键术语和规则。</p>
+<h2>微网名称即入口</h2>
+<p>每个微网在后台系统中有专属的技术标识，但在 GridPilot 中，<strong>你完全不需要记这些编号</strong>。直接输入微网名称的关键词即可：</p>
+<ul>
+<li>输入&quot;惠州&quot; → AI 自动匹配到&quot;惠州XX微网&quot;</li>
+<li>输入&quot;深圳龙岗&quot; → 自动定位到对应微网</li>
+<li>匹配到多个结果时，AI 会列出候选让你确认</li>
+</ul>
+<h2>排程动作</h2>
+<p>储能系统的排程以 <strong>15 分钟</strong>为颗粒度，每个时段有一个动作指令：</p>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th>含义</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>空闲</td>
+<td>不充不放</td>
+<td>储能系统处于待机状态</td>
+</tr>
+<tr>
+<td>充电</td>
+<td>从电网取电</td>
+<td>低电价时段存入电池</td>
+</tr>
+<tr>
+<td>放电</td>
+<td>释放电能</td>
+<td>高电价时段供给负荷</td>
+</tr>
+</tbody></table>
+<p>一天共 <strong>96 个时段</strong>（24 小时 × 4 个 15 分钟）。</p>
+<h2>电价时段</h2>
+<p>分时电价是储能收益的基础。不同时段电价不同，GridPilot 的图表中用颜色直观区分：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>图表颜色</th>
+<th>运营策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>深谷</td>
+<td>蓝色</td>
+<td>最低电价，优先充电</td>
+</tr>
+<tr>
+<td>谷</td>
+<td>绿色</td>
+<td>低电价，可充电</td>
+</tr>
+<tr>
+<td>平</td>
+<td>灰色</td>
+<td>正常电价，通常空闲</td>
+</tr>
+<tr>
+<td>峰</td>
+<td>橙色</td>
+<td>高电价，优先放电</td>
+</tr>
+<tr>
+<td>峰尖</td>
+<td>红色</td>
+<td>最高电价，必须放电</td>
+</tr>
+</tbody></table>
+<h3>盈利核心逻辑：谷充峰放</h3>
+<p>储能系统的基本盈利模式就是<strong>峰谷套利</strong>——在低电价时段（谷/深谷）充电，在高电价时段（峰/峰尖）放电，赚取电价差。</p>
+<h2>单位换算</h2>
+<p>运行数据和负荷数据的原始值单位是 <strong>kWh（千瓦时，电量）</strong>，图表展示的是 <strong>kW（千瓦，功率）</strong>。换算规则如下：</p>
+<table>
+<thead>
+<tr>
+<th>数据颗粒度</th>
+<th>换算公式</th>
+<th>原理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>15 分钟</td>
+<td><strong>电量 × 4 = 功率</strong></td>
+<td>功率 = 电量 ÷ 0.25h</td>
+</tr>
+<tr>
+<td>5 分钟</td>
+<td><strong>电量 × 12 = 功率</strong></td>
+<td>功率 = 电量 ÷ (5/60)h</td>
+</tr>
+</tbody></table>
+<p>例如：某 15 分钟时段电量 = 25 kWh，则平均功率 = 25 × 4 = <strong>100 kW</strong>。</p>
+<blockquote>
+<p>GridPilot 的图表会自动完成换算，你在图表上看到的已经是功率值 (kW)。</p>
+</blockquote>
+<h2>排程版本</h2>
+<p>排程系统每天会<strong>多次下发排程</strong>，随着负荷预测更新、电价调整等信息变化不断优化。你可以查看不同时间点的排程版本：</p>
+<ul>
+<li>查看<strong>当日最终版</strong>排程：这是经过所有轮次优化后的最终方案</li>
+<li>查看<strong>某个时刻之前的版本</strong>：比如看早上 8 点前下发的排程</li>
+</ul>
+<p>通过对比不同版本的排程，可以分析排程优化过程和调整原因。</p>
+<h2>物理约束</h2>
+<p>微网的运行受到一系列物理条件限制，了解这些有助于理解为什么有时候排程执行与计划不一致：</p>
+<h3>变压器容量</h3>
+<ul>
+<li>微网接入电网的容量上限（kVA）</li>
+<li>微网的总用电功率不能超过变压器容量</li>
+</ul>
+<h3>防超容</h3>
+<ul>
+<li>当微网实际用电负荷接近变压器容量时，储能系统需要<strong>放电降低用电需量</strong></li>
+<li>超容会导致电力公司罚款或强制限电</li>
+</ul>
+<h3>防逆流</h3>
+<ul>
+<li>当光伏发电超过负荷需求时，多余电力不能<strong>倒送回电网</strong></li>
+<li>储能系统需要<strong>充电吸收</strong>多余光伏电力</li>
+</ul>
+<h3>SOC 范围</h3>
+<ul>
+<li>SOC（State of Charge）表示电池当前电量百分比</li>
+<li>安全运行区间通常在 5%~95% 之间</li>
+<li>过低或过高都会影响电池寿命</li>
+</ul>
+<h2>相关文档</h2>
+<ul>
+<li><a href="#diagnosis-patterns">智能诊断模式</a> — 了解 AI 如何组合多种数据进行诊断</li>
+<li><a href="#use-cases">使用场景</a> — 实际使用示例</li>
+<li><a href="#overview">返回文档首页</a></li>
+</ul>
+</div>
+      </section>
+
+      <section id="use-cases" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">领域理解</p>
+            <h3 class="section-title">使用场景</h3>
+            <p class="section-summary">按运营任务理解如何提问、追问和生成排程。</p>
+          </div>
+        </div>
+        <div class="prose"><p>本文列举 GridPilot 的典型使用场景，帮助你快速了解如何用一句话完成日常运营工作。</p>
+<h2>场景 1：日常排程查询</h2>
+<h3>你可以这样问</h3>
+<ul>
+<li>&quot;查一下惠州微网今天的排程&quot;</li>
+<li>&quot;今天什么时候充电什么时候放电？&quot;</li>
+<li>&quot;看看明天的排程安排&quot;</li>
+</ul>
+<h3>AI 帮你做了什么</h3>
+<ol>
+<li>根据你说的微网名称自动找到对应微网</li>
+<li>调取排程数据</li>
+<li>调取电价数据</li>
+<li>生成排程柱状图 + 电价色带</li>
+</ol>
+<h3>你会看到</h3>
+<ul>
+<li>排程柱状图：蓝色充电向上、橙色放电向下</li>
+<li>电价色带背景：直观看出谷充峰放策略</li>
+<li>文字说明：各时段的动作和功率</li>
+</ul>
+<h3>还可以追问</h3>
+<ul>
+<li>&quot;对比一下早上 8 点版本和最终版有什么不同？&quot;</li>
+<li>&quot;和昨天的排程比一下&quot;</li>
+</ul>
+<hr>
+<h2>场景 2：排程执行监控</h2>
+<h3>你可以这样问</h3>
+<ul>
+<li>&quot;今天排程执行得怎么样？&quot;</li>
+<li>&quot;有没有按计划执行？&quot;</li>
+<li>&quot;排程一致性怎么样？&quot;</li>
+</ul>
+<h3>AI 帮你做了什么</h3>
+<ol>
+<li>同时获取排程计划、实际运行数据和电价</li>
+<li>将计划与实际叠加在同一张图表中</li>
+</ol>
+<h3>你会看到</h3>
+<ul>
+<li>排程柱 + 实际功率曲线叠加，偏差一目了然</li>
+<li>AI 会指出：哪些时段偏离计划、偏离了多少</li>
+</ul>
+<hr>
+<h2>场景 3：异常诊断</h2>
+<h3>你可以这样问</h3>
+<ul>
+<li>&quot;下午峰段为什么没放电？&quot;</li>
+<li>&quot;早上 5:06 为什么只有 30kW？&quot;</li>
+<li>&quot;平段功率为什么是 0？&quot;</li>
+<li>&quot;峰段放电功率为什么这么低？&quot;</li>
+</ul>
+<h3>AI 帮你做了什么</h3>
+<ol>
+<li>获取排程、运行数据、电价，必要时还查微网物理约束</li>
+<li>按 5 步诊断法分析：确认现象 → 查计划 → 查电价 → 查约束 → 综合结论</li>
+</ol>
+<h3>你会看到</h3>
+<ul>
+<li>多数据叠加图：排程柱 + 功率线 + 电价色带</li>
+<li>详细文字分析：具体原因和改进建议</li>
+</ul>
+<h3>常见诊断结论</h3>
+<ul>
+<li>SOC 已到下限（如 5%），无电可放</li>
+<li>防超容策略限制了充电功率</li>
+<li>排程未下发该时段的放电指令</li>
+<li>设备通信异常导致执行中断</li>
+</ul>
+<hr>
+<h2>场景 4：收益优化分析</h2>
+<h3>你可以这样问</h3>
+<ul>
+<li>&quot;如果 SOC 下限调到 20%，收益会怎样？&quot;</li>
+<li>&quot;对比一下不同参数的收益&quot;</li>
+<li>&quot;有没有更优的排程策略？&quot;</li>
+</ul>
+<h3>AI 帮你做了什么</h3>
+<ol>
+<li>获取历史数据（负荷、电价、排程、微网信息）</li>
+<li>运行收益回测模拟</li>
+<li>对比不同参数下的收益差异</li>
+</ol>
+<h3>你会看到</h3>
+<ul>
+<li>不同参数方案的收益对比</li>
+<li>AI 给出的优化建议</li>
+</ul>
+<hr>
+<h2>场景 5：负荷预测验证</h2>
+<h3>你可以这样问</h3>
+<ul>
+<li>&quot;看看今天负荷预测准不准&quot;</li>
+<li>&quot;预测偏差有多大？&quot;</li>
+</ul>
+<h3>AI 帮你做了什么</h3>
+<ol>
+<li>分别获取实际负荷和预测负荷数据</li>
+<li>获取电价数据</li>
+<li>生成双线对比图</li>
+</ol>
+<h3>你会看到</h3>
+<ul>
+<li>双线对比图：实际 vs 预测</li>
+<li>电价色带背景</li>
+<li>偏差分析：哪些时段偏差大、偏差率多少</li>
+</ul>
+<hr>
+<h2>场景 6：排程生成</h2>
+<h3>你可以这样问</h3>
+<ul>
+<li>&quot;帮我排一个明天的排程&quot;</li>
+<li>&quot;考虑检修窗口 8:00-10:00 不放电，排个明天的&quot;</li>
+<li>&quot;上午只充到 80%，下午全部放掉&quot;</li>
+</ul>
+<h3>AI 帮你做了什么</h3>
+<ol>
+<li>获取目标日期的电价</li>
+<li>获取微网物理约束</li>
+<li>调用排程算法生成方案（自动加入你提的额外约束）</li>
+</ol>
+<h3>你会看到</h3>
+<ul>
+<li>新排程方案的柱状图</li>
+<li>AI 说明排程策略和预期效果</li>
+</ul>
+<hr>
+<h2>场景 7：综合查询</h2>
+<h3>你可以这样问</h3>
+<ul>
+<li>&quot;这个微网最近三天运行情况总结一下&quot;</li>
+<li>&quot;这周的充放电量统计&quot;</li>
+<li>&quot;这个微网的基本情况是什么？&quot;</li>
+</ul>
+<h3>AI 帮你做了什么</h3>
+<p>根据问题复杂度，跨天、跨维度获取数据，汇总分析。</p>
+<hr>
+<h2>提问技巧</h2>
+<ol>
+<li><strong>直接说微网名称</strong>：不用查编号，说&quot;惠州&quot;、&quot;深圳龙岗&quot;就行</li>
+<li><strong>时间可以用自然语言</strong>：&quot;今天&quot;、&quot;昨天&quot;、&quot;上周五&quot;、&quot;3月10号&quot;</li>
+<li><strong>问题可以很具体</strong>：&quot;早上 5 点到 8 点的功率&quot; 比 &quot;看看运行数据&quot; 能得到更精准的答案</li>
+<li><strong>可以追问</strong>：AI 保持对话上下文，追问时无需重复微网名称</li>
+<li><strong>可以提约束</strong>：生成排程时直接说约束条件，如&quot;检修窗口不放电&quot;</li>
+</ol>
+<h2>相关文档</h2>
+<ul>
+<li><a href="#diagnosis-patterns">智能诊断模式</a> — 7 种诊断模式详解</li>
+<li><a href="#concepts">核心概念</a> — 储能领域术语</li>
+<li><a href="#overview">返回文档首页</a></li>
+</ul>
+</div>
+      </section>
+
+      <section id="diagnosis-patterns" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">领域理解</p>
+            <h3 class="section-title">智能诊断模式</h3>
+            <p class="section-summary">拆解 AI 在排程、异常诊断和收益分析中的工作流。</p>
+          </div>
+        </div>
+        <div class="prose"><p>GridPilot 的 AI 会根据你的问题自动选择和组合不同的数据源。本文详解 7 种诊断模式，帮助你理解 AI 的分析思路和能力边界。</p>
+<h2>前置：微网识别</h2>
+<p><strong>触发</strong>：你在对话中提到微网名称</p>
+<p><strong>过程</strong>：AI 自动将你说的名称（如&quot;惠州&quot;、&quot;深圳龙岗&quot;）匹配到对应微网，获取系统所需的标识信息。所有后续分析都以此为前提。</p>
+<hr>
+<h2>模式 1：排程查询</h2>
+<p><strong>你可能会问</strong>：&quot;查排程&quot;、&quot;今天什么安排&quot;、&quot;看看排程计划&quot;</p>
+<p><strong>AI 的工作流程</strong>：</p>
+<ul>
+<li>获取排程数据</li>
+<li>获取电价信息（生成色带背景）</li>
+</ul>
+<p><strong>你会看到</strong>：排程柱状图（充电向上、放电向下）+ 电价色带背景，各时段的充放电安排一目了然。</p>
+<p><strong>示例</strong>：</p>
+<blockquote>
+<p>你：查一下惠州微网今天的排程</p>
+<p>AI：今日排程安排如下——谷段(0:00-6:00)充电至95%，峰段(10:00-12:00, 14:00-17:00)放电至10%...</p>
+</blockquote>
+<hr>
+<h2>模式 2：排程 vs 实际</h2>
+<p><strong>你可能会问</strong>：&quot;执行得怎么样&quot;、&quot;有没有按计划执行&quot;、&quot;排程一致性&quot;</p>
+<p><strong>AI 的工作流程</strong>：</p>
+<ul>
+<li>获取排程计划</li>
+<li>获取实际运行数据</li>
+<li>获取电价信息</li>
+</ul>
+<p><strong>你会看到</strong>：排程柱 + 实际功率曲线叠加在同一图表，偏差一目了然。</p>
+<p><strong>AI 会重点关注</strong>：</p>
+<ul>
+<li>充放电时段是否一致</li>
+<li>实际功率是否达到计划值</li>
+<li>SOC 变化是否符合预期</li>
+</ul>
+<hr>
+<h2>模式 3：异常诊断</h2>
+<p><strong>你可能会问</strong>：&quot;为什么没放电&quot;、&quot;功率异常&quot;、&quot;为什么是 0&quot;、&quot;功率只有 30kW&quot;</p>
+<p><strong>AI 的工作流程</strong>：</p>
+<ul>
+<li>查排程计划（是否安排了充放电）</li>
+<li>查实际运行数据（实际表现如何）</li>
+<li>查电价时段（确认是谷/平/峰哪个时段）</li>
+<li>按需查微网物理约束（是否受限于防超容/防逆流/SOC 等）</li>
+</ul>
+<p><strong>AI 的 5 步诊断法</strong>：</p>
+<ol>
+<li><strong>确认现象</strong>：功率偏离计划多少？什么时段？</li>
+<li><strong>查排程计划</strong>：该时段排了什么动作？计划功率多少？</li>
+<li><strong>查电价时段</strong>：是谷/平/峰哪个时段？</li>
+<li><strong>查物理约束</strong>：是否因防超容/防逆流/SOC 限制导致？</li>
+<li><strong>综合结论</strong>：给出原因和建议</li>
+</ol>
+<p><strong>常见诊断结论</strong>：</p>
+<ul>
+<li>SOC 已到下限，无电可放</li>
+<li>防超容策略限制了充电功率</li>
+<li>排程未下发该时段的放电指令</li>
+<li>设备通信异常导致执行中断</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<blockquote>
+<p>你：早上 5:06 为什么只有 30kW？</p>
+<p>AI：排程计划该时段充电功率 100kW，但实际只有 30kW。查看微网信息发现，此时负荷较低(50kW)，防逆流限值触发，系统自动降低充电功率以避免逆流。</p>
+</blockquote>
+<hr>
+<h2>模式 4：需量诊断</h2>
+<p><strong>你可能会问</strong>：&quot;需量超限了吗&quot;、&quot;防超容&quot;、&quot;有没有超容风险&quot;</p>
+<p><strong>AI 的工作流程</strong>：</p>
+<ul>
+<li>获取需量时序数据</li>
+<li>获取变压器容量阈值</li>
+</ul>
+<p><strong>你会看到</strong>：需量变化曲线与变压器容量阈值对比，超容风险时段清晰标出。</p>
+<hr>
+<h2>模式 5：负荷验证</h2>
+<p><strong>你可能会问</strong>：&quot;负荷预测准不准&quot;、&quot;预测偏差多少&quot;</p>
+<p><strong>AI 的工作流程</strong>：</p>
+<ul>
+<li>获取实际负荷数据</li>
+<li>获取预测负荷数据</li>
+<li>获取电价信息</li>
+</ul>
+<p><strong>你会看到</strong>：双线对比图（实际 vs 预测），AI 会计算各时段偏差率，指出预测不准的时段和可能原因。</p>
+<hr>
+<h2>模式 6：收益模拟</h2>
+<p><strong>你可能会问</strong>：&quot;收益回测&quot;、&quot;调参看看效果&quot;、&quot;SOC 下限调高会怎样&quot;</p>
+<p><strong>AI 的工作流程</strong>：</p>
+<ul>
+<li>从已有数据中自动组装回测参数</li>
+<li>运行收益模拟</li>
+</ul>
+<p><strong>你会看到</strong>：不同参数方案的收益对比结果。</p>
+<p><strong>示例</strong>：</p>
+<blockquote>
+<p>你：SOC 下限从 10% 调到 20%，收益会不会更好？</p>
+<p>AI：分别以 10% 和 20% SOC 下限回测，对比两种方案的充放电量和收益差异，给出优化建议。</p>
+</blockquote>
+<hr>
+<h2>模式 7：排程生成</h2>
+<p><strong>你可能会问</strong>：&quot;帮我排个明天的&quot;、&quot;生成排程&quot;、&quot;考虑检修窗口排一下&quot;</p>
+<p><strong>AI 的工作流程</strong>：</p>
+<ul>
+<li>获取目标日期的电价</li>
+<li>获取微网物理约束</li>
+<li>调用排程算法生成最优方案</li>
+</ul>
+<p><strong>你会看到</strong>：新排程方案的柱状图 + 策略说明。支持通过自然语言添加额外约束（如&quot;检修窗口不放电&quot;、&quot;上午只充到 80%&quot;等）。</p>
+<hr>
+<h2>AI 的诊断原则</h2>
+<ul>
+<li><strong>用数据说话</strong>：所有结论都引用具体时段和数值，不做空泛推测</li>
+<li><strong>多角度验证</strong>：至少从排程、实际运行、电价三个维度交叉分析</li>
+<li><strong>先说结论再展开</strong>：简明扼要给出结论，需要时再展开详细分析</li>
+<li><strong>图文配合</strong>：图表展示数据趋势，文字解释原因和建议，不重复描述</li>
+</ul>
+<h2>相关文档</h2>
+<ul>
+<li><a href="#concepts">核心概念</a> — 储能领域术语和规则</li>
+<li><a href="#use-cases">使用场景</a> — 实际场景示例</li>
+<li><a href="#overview">返回文档首页</a></li>
+</ul>
+</div>
+      </section>
+
+      <section id="faq" class="doc-section">
+        <div class="section-header">
+          <div>
+            <p class="section-group-label">常见问题</p>
+            <h3 class="section-title">常见问题</h3>
+            <p class="section-summary">集中处理安装、配置、图表、缓存和日志排查问题。</p>
+          </div>
+        </div>
+        <div class="prose"><h2>安装类</h2>
+<h3>macOS 提示&quot;无法验证开发者&quot;</h3>
+<p>这是 macOS 的安全机制，并非应用问题。解决方法：</p>
+<ol>
+<li>打开「系统偏好设置 → 安全性与隐私 → 通用」</li>
+<li>找到被拦截的 GridPilot 提示，点击「仍要打开」</li>
+</ol>
+<h3>应用启动后白屏</h3>
+<p>可能原因及解决方法：</p>
+<ol>
+<li><strong>端口被占用</strong>：其他应用可能占用了 GridPilot 的默认端口，关闭冲突应用后重试</li>
+<li><strong>重启应用</strong>：完全退出 GridPilot 后重新启动</li>
+<li><strong>清理缓存</strong>：删除 <code>~/.gridpilot/</code> 目录后重启（注意：会清除历史对话）</li>
+</ol>
+<hr>
+<h2>配置类</h2>
+<h3>AI 服务连接失败</h3>
+<p>按以下顺序排查：</p>
+<ol>
+<li><strong>密钥是否正确</strong>：确认 API Key 未过期、有足够余额，复制时避免多余空格</li>
+<li><strong>服务商地址</strong>：确认地址格式正确</li>
+<li><strong>网络连通性</strong>：确认当前网络可以访问该服务商（部分海外服务可能需要网络代理）</li>
+<li><strong>模型名称</strong>：确认所选模型确实可用</li>
+</ol>
+<h3>数据服务连接不上</h3>
+<ol>
+<li>确认服务地址填写正确</li>
+<li>检查是否需要认证信息（如授权令牌等）</li>
+<li>确认数据服务本身运行正常，可联系服务管理员</li>
+<li>检查网络连接，内网环境可能需要 VPN</li>
+</ol>
+<h3>如何切换 AI 模型</h3>
+<p>在对话界面顶部的<strong>模型选择器</strong>中可以实时切换当前使用的模型，无需重启应用。</p>
+<hr>
+<h2>使用类</h2>
+<h3>微网名称找不到</h3>
+<ol>
+<li><strong>检查数据服务连接</strong>：设置 → 数据服务管理，确认状态为&quot;已连接&quot;</li>
+<li><strong>尝试其他关键词</strong>：用微网的完整名称或其他关键词重试</li>
+<li><strong>刷新微网列表</strong>：在微网上下文面板中点击刷新按钮</li>
+</ol>
+<h3>查询超时或无响应</h3>
+<ol>
+<li>检查本地网络连接是否正常</li>
+<li>确认储能数据后端服务是否可用</li>
+<li>对于大时间范围查询，尝试缩短查询时段（如从&quot;一个月&quot;改为&quot;一周&quot;）</li>
+</ol>
+<h3>图表不显示</h3>
+<p>排程柱状图的电价色带背景依赖电价数据。如果图表空白：</p>
+<ol>
+<li>确认数据服务已正确连接</li>
+<li>确认所查微网在数据服务中有对应数据</li>
+<li>刷新页面后重试</li>
+</ol>
+<h3>权限弹窗频繁出现</h3>
+<p>AI 在工具请求权限时会弹出确认。可通过以下方式减少弹窗：</p>
+<ol>
+<li>在弹窗中优先使用「本次会话允许」</li>
+<li>如任务完全可信，可进入「设置 → 权限确认」开启「自动批准所有操作」</li>
+</ol>
+<hr>
+<h2>故障排除</h2>
+<h3>如何查看运行日志</h3>
+<p>如遇到异常需要排查，可打开应用内置的开发者工具：</p>
+<ul>
+<li>macOS：按 <code>Cmd + Option + I</code></li>
+<li>Windows/Linux：按 <code>Ctrl + Shift + I</code></li>
+</ul>
+<p>切换到 Console 标签即可查看详细日志信息。</p>
+<h3>如何重置数据</h3>
+<p>如遇到数据异常，可删除数据目录后重启（<strong>注意：会清除所有历史对话</strong>）：</p>
+<pre><code class="language-bash">rm -rf ~/.gridpilot/
+</code></pre>
+<p>重启应用后数据会自动重新初始化。</p>
+<h3>如何清理查询缓存</h3>
+<p>查询结果会自动缓存并按时间自动过期，通常无需手动清理。如需立即清理，可删除数据目录后重启（参考上一条）。</p>
+<h3>如何反馈问题</h3>
+<p>提交问题时，请提供以下信息以便快速定位：</p>
+<ol>
+<li><strong>复现步骤</strong>：具体操作顺序</li>
+<li><strong>错误截图</strong>：如有弹窗或异常显示</li>
+<li><strong>操作系统</strong>：macOS / Windows / Linux 及版本</li>
+<li><strong>问题频率</strong>：每次都出现 / 偶尔出现</li>
+</ol>
+<hr>
+<p><a href="#overview">返回文档首页</a></p>
+</div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    GridPilot 让排程、运行、电价与约束回到同一条运营工作流里。
+  </footer>
+</div>
+
+<script>
+/* ── Scroll spy + smooth anchor ──────────────────────────────────────────── */
+(function () {
+  var links = document.querySelectorAll('.nav-link[data-target]');
+  var sectionIds = Array.from(links).map(function (l) { return l.dataset.target; });
+  var activeId = sectionIds[0] || null;
+
+  function setActive(id) {
+    if (id === activeId) return;
+    activeId = id;
+    links.forEach(function (l) {
+      l.classList.toggle('active', l.dataset.target === id);
+    });
+    /* scroll nav item into view inside sidebar */
+    var activeLink = document.querySelector('.nav-link.active');
+    if (activeLink) activeLink.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+
+  function syncScroll() {
+    var offset = 180;
+    var best = null;
+    for (var i = 0; i < sectionIds.length; i++) {
+      var el = document.getElementById(sectionIds[i]);
+      if (el) {
+        var top = el.getBoundingClientRect().top;
+        if (top <= offset) best = sectionIds[i];
+      }
+    }
+    setActive(best || sectionIds[0]);
+  }
+
+  var raf = 0;
+  function schedule() { cancelAnimationFrame(raf); raf = requestAnimationFrame(syncScroll); }
+
+  /* Listen for scroll on the document */
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  schedule();
+
+  /* Smooth scroll on nav click */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = this.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      history.pushState(null, '', '#' + id);
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+    });
+  });
+
+  /* Initial hash */
+  if (location.hash) {
+    var initTarget = document.getElementById(location.hash.slice(1));
+    if (initTarget) {
+      setTimeout(function () {
+        window.scrollTo({ top: initTarget.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+      }, 100);
+    }
+  }
+
+  setActive(sectionIds[0]);
+})();
+</script>
+
+</body>
+</html>

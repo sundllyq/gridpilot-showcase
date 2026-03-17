@@ -1,0 +1,127 @@
+<svg width="1440" height="920" viewBox="0 0 1440 920" fill="none" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+  <defs>
+    <linearGradient id="bg" x1="112" y1="84" x2="1328" y2="836" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#F3E7D6"/>
+    </linearGradient>
+    <linearGradient id="card" x1="128" y1="118" x2="1312" y2="814" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F0"/>
+      <stop offset="1" stop-color="#F7EBD9"/>
+    </linearGradient>
+    <linearGradient id="chart" x1="196" y1="236" x2="1244" y2="706" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#FBF0E1"/>
+    </linearGradient>
+    <linearGradient id="peakBand" x1="860" y1="312" x2="1098" y2="312" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8DDC7" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#BF6C34" stop-opacity="0.28"/>
+    </linearGradient>
+    <linearGradient id="valleyBand" x1="298" y1="312" x2="590" y2="312" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DCE9D7" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#879B80" stop-opacity="0.26"/>
+    </linearGradient>
+    <style>
+      .ink { stroke: #47372B; }
+      .ink-fill { fill: #47372B; }
+      .muted { fill: #756657; }
+      .hair { stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .line { stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .dash { stroke-dasharray: 12 12; }
+      .label { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 0.1em; }
+      .copy { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 28px; font-weight: 600; }
+      .meta { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 22px; font-weight: 500; }
+      .tiny { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0.08em; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="920" rx="48" fill="url(#bg)"/>
+  <circle cx="1186" cy="138" r="86" fill="#FFFFFF" fill-opacity="0.5"/>
+  <circle cx="220" cy="752" r="124" fill="#E6D4C2" fill-opacity="0.22"/>
+
+  <rect x="120" y="104" width="1200" height="712" rx="34" fill="#5A4330" fill-opacity="0.055"/>
+  <rect x="112" y="94" width="1200" height="712" rx="34" fill="#5A4330" fill-opacity="0.028"/>
+  <rect x="104" y="84" width="1200" height="712" rx="34" fill="url(#card)"/>
+  <rect x="104" y="84" width="1200" height="712" rx="34" class="ink line" fill-opacity="0"/>
+
+  <rect x="152" y="132" width="228" height="42" rx="21" fill="#FFF5E9"/>
+  <rect x="152" y="132" width="228" height="42" rx="21" class="ink hair" fill-opacity="0"/>
+  <text x="188" y="159" class="label muted">VISUAL COMPOSITION</text>
+
+  <rect x="900" y="126" width="304" height="58" rx="24" fill="#EAD8C7"/>
+  <rect x="900" y="126" width="304" height="58" rx="24" class="ink hair" fill-opacity="0"/>
+  <text x="970" y="163" class="copy ink-fill">Charge + Load + Price</text>
+
+  <rect x="168" y="214" width="1088" height="470" rx="28" fill="#594231" fill-opacity="0.05"/>
+  <rect x="162" y="206" width="1088" height="470" rx="28" fill="#594231" fill-opacity="0.02"/>
+  <rect x="156" y="198" width="1088" height="470" rx="28" fill="url(#chart)"/>
+  <rect x="156" y="198" width="1088" height="470" rx="28" class="ink line" fill-opacity="0"/>
+
+  <rect x="198" y="232" width="226" height="18" rx="9" fill="#4C3B2E" fill-opacity="0.18"/>
+  <rect x="198" y="264" width="172" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.1"/>
+
+  <rect x="198" y="312" width="100" height="268" rx="12" fill="#F4EBDD"/>
+  <rect x="298" y="312" width="292" height="268" rx="12" fill="url(#valleyBand)"/>
+  <rect x="590" y="312" width="270" height="268" rx="12" fill="#F1E8DA"/>
+  <rect x="860" y="312" width="238" height="268" rx="12" fill="url(#peakBand)"/>
+  <rect x="1098" y="312" width="106" height="268" rx="12" fill="#F4EBDD"/>
+
+  <path d="M218 580H1202" class="ink hair"/>
+  <path d="M218 312V580" class="ink hair"/>
+  <path d="M218 380H1202" class="ink hair dash" opacity="0.58"/>
+  <path d="M218 448H1202" class="ink hair dash" opacity="0.58"/>
+  <path d="M218 516H1202" class="ink hair dash" opacity="0.58"/>
+  <path d="M306 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M394 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M482 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M570 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M658 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M746 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M834 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M922 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M1010 312V580" class="ink hair dash" opacity="0.58"/>
+  <path d="M1098 312V580" class="ink hair dash" opacity="0.58"/>
+
+  <g opacity="0.95">
+    <rect x="386" y="422" width="18" height="126" rx="9" fill="#6E87B3"/>
+    <rect x="410" y="422" width="18" height="126" rx="9" fill="#6E87B3"/>
+    <rect x="434" y="422" width="18" height="126" rx="9" fill="#6E87B3"/>
+    <rect x="458" y="422" width="18" height="126" rx="9" fill="#6E87B3"/>
+    <rect x="482" y="422" width="18" height="126" rx="9" fill="#6E87B3"/>
+    <rect x="546" y="478" width="18" height="70" rx="9" fill="#BF6C34"/>
+    <rect x="570" y="478" width="18" height="70" rx="9" fill="#BF6C34"/>
+    <rect x="594" y="478" width="18" height="70" rx="9" fill="#BF6C34"/>
+    <rect x="618" y="478" width="18" height="70" rx="9" fill="#BF6C34"/>
+    <rect x="702" y="402" width="18" height="146" rx="9" fill="#6E87B3"/>
+    <rect x="726" y="402" width="18" height="146" rx="9" fill="#6E87B3"/>
+    <rect x="750" y="402" width="18" height="146" rx="9" fill="#6E87B3"/>
+    <rect x="774" y="402" width="18" height="146" rx="9" fill="#6E87B3"/>
+    <rect x="918" y="492" width="18" height="56" rx="9" fill="#BF6C34"/>
+    <rect x="942" y="492" width="18" height="56" rx="9" fill="#BF6C34"/>
+    <rect x="966" y="492" width="18" height="56" rx="9" fill="#BF6C34"/>
+    <rect x="990" y="492" width="18" height="56" rx="9" fill="#BF6C34"/>
+    <rect x="1014" y="492" width="18" height="56" rx="9" fill="#BF6C34"/>
+  </g>
+
+  <path d="M220 404C258 398 292 396 326 400C360 404 392 410 426 404C460 398 494 380 526 390C558 400 586 448 620 452C654 456 682 432 716 436C750 440 782 500 816 508C850 516 884 500 918 486C952 472 988 458 1028 460C1068 462 1114 468 1204 462" fill="none" stroke="#5078D3" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+  <path d="M220 514C252 512 286 510 320 512C354 514 388 516 420 518C452 520 482 522 514 474C546 426 576 336 606 328C636 320 668 338 700 418C732 498 762 566 794 568C826 570 858 534 890 470C922 406 954 364 986 364C1018 364 1050 406 1082 470C1114 534 1154 564 1204 566" fill="none" stroke="#2B9D73" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12 10" vector-effect="non-scaling-stroke"/>
+  <path d="M220 422C256 426 290 428 326 426C362 424 398 420 434 434C470 448 502 470 536 466C570 462 604 430 638 430C672 430 704 466 738 466C772 466 806 446 840 432C874 418 908 406 942 404C976 402 1014 414 1050 416C1086 418 1134 414 1204 408" fill="none" stroke="#BF6C34" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="14 12" vector-effect="non-scaling-stroke"/>
+
+  <rect x="208" y="714" width="176" height="52" rx="24" fill="#DCE9D7"/>
+  <rect x="208" y="714" width="176" height="52" rx="24" class="ink hair" fill-opacity="0"/>
+  <circle cx="244" cy="740" r="8" fill="#879B80"/>
+  <text x="266" y="746" class="tiny muted">PRICE VALLEY</text>
+
+  <rect x="404" y="714" width="148" height="52" rx="24" fill="#ECE2D6"/>
+  <rect x="404" y="714" width="148" height="52" rx="24" class="ink hair" fill-opacity="0"/>
+  <circle cx="440" cy="740" r="8" fill="#A3907E"/>
+  <text x="462" y="746" class="tiny muted">PRICE FLAT</text>
+
+  <rect x="572" y="714" width="152" height="52" rx="24" fill="#F8DDC7"/>
+  <rect x="572" y="714" width="152" height="52" rx="24" class="ink hair" fill-opacity="0"/>
+  <circle cx="608" cy="740" r="8" fill="#BF6C34"/>
+  <text x="630" y="746" class="tiny muted">PRICE PEAK</text>
+
+  <rect x="798" y="714" width="470" height="52" rx="24" fill="#FFF7ED"/>
+  <rect x="798" y="714" width="470" height="52" rx="24" class="ink hair" fill-opacity="0"/>
+  <text x="842" y="747" class="meta muted">保留电价色带、排程柱与实际负荷三层信息关系</text>
+</svg>

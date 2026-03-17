@@ -1,0 +1,97 @@
+<svg width="760" height="1440" viewBox="0 0 760 1440" fill="none" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+  <defs>
+    <linearGradient id="bg" x1="84" y1="66" x2="676" y2="1368" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF9"/>
+      <stop offset="1" stop-color="#F2E6D7"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="84" y1="100" x2="676" y2="1320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F1"/>
+      <stop offset="1" stop-color="#F7EAD8"/>
+    </linearGradient>
+    <style>
+      .ink { stroke: #47372B; }
+      .ink-fill { fill: #47372B; }
+      .muted { fill: #766658; }
+      .hair { stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .line { stroke-width: 3.1; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+      .title { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 30px; font-weight: 700; }
+      .body { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 24px; font-weight: 600; }
+      .meta { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 0.08em; }
+      .tiny { font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-size: 16px; font-weight: 500; }
+    </style>
+  </defs>
+
+  <rect width="760" height="1440" rx="46" fill="url(#bg)"/>
+  <circle cx="552" cy="124" r="88" fill="#FFFFFF" fill-opacity="0.55"/>
+  <circle cx="180" cy="1262" r="112" fill="#E8D6C5" fill-opacity="0.22"/>
+
+  <rect x="74" y="96" width="612" height="1240" rx="34" fill="#5A4330" fill-opacity="0.055"/>
+  <rect x="68" y="88" width="612" height="1240" rx="34" fill="#5A4330" fill-opacity="0.03"/>
+  <rect x="62" y="80" width="612" height="1240" rx="34" fill="url(#panel)"/>
+  <rect x="62" y="80" width="612" height="1240" rx="34" class="ink line" fill-opacity="0"/>
+
+  <rect x="96" y="116" width="420" height="20" rx="10" fill="#4C3B2E" fill-opacity="0.18"/>
+  <rect x="96" y="148" width="226" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.1"/>
+  <rect x="96" y="194" width="144" height="42" rx="21" fill="#EEF4E8"/>
+  <rect x="96" y="194" width="144" height="42" rx="21" class="ink hair" fill-opacity="0"/>
+  <text x="126" y="221" class="meta muted">GRID TAG</text>
+
+  <rect x="96" y="264" width="544" height="122" rx="24" fill="#F5EADB"/>
+  <rect x="96" y="264" width="544" height="122" rx="24" class="ink hair" fill-opacity="0"/>
+  <rect x="122" y="296" width="214" height="14" rx="7" fill="#4C3B2E" fill-opacity="0.14"/>
+  <rect x="122" y="326" width="300" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+  <rect x="122" y="350" width="244" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+
+  <rect x="96" y="420" width="158" height="150" rx="24" fill="#FFF7ED"/>
+  <rect x="96" y="420" width="158" height="150" rx="24" class="ink hair" fill-opacity="0"/>
+  <rect x="289" y="420" width="158" height="150" rx="24" fill="#FFF7ED"/>
+  <rect x="289" y="420" width="158" height="150" rx="24" class="ink hair" fill-opacity="0"/>
+  <rect x="482" y="420" width="158" height="150" rx="24" fill="#FFF7ED"/>
+  <rect x="482" y="420" width="158" height="150" rx="24" class="ink hair" fill-opacity="0"/>
+
+  <text x="126" y="468" class="meta muted">TRANSFORMER</text>
+  <text x="319" y="468" class="meta muted">STORAGE</text>
+  <text x="512" y="468" class="meta muted">PCS</text>
+  <text x="126" y="524" class="title ink-fill">25,000</text>
+  <text x="319" y="524" class="title ink-fill">40,140</text>
+  <text x="512" y="524" class="title ink-fill">20,070</text>
+  <text x="126" y="554" class="tiny muted">KVA 主接入能力</text>
+  <text x="319" y="554" class="tiny muted">KWH 电池额定容量</text>
+  <text x="512" y="554" class="tiny muted">KW PCS 额定功率</text>
+
+  <rect x="96" y="606" width="154" height="42" rx="21" fill="#EEF4E8"/>
+  <rect x="96" y="606" width="154" height="42" rx="21" class="ink hair" fill-opacity="0"/>
+  <text x="124" y="633" class="meta muted">CONTEXT</text>
+
+  <rect x="96" y="676" width="244" height="88" rx="24" fill="#FFF7ED"/>
+  <rect x="96" y="676" width="244" height="88" rx="24" class="ink hair" fill-opacity="0"/>
+  <rect x="396" y="676" width="244" height="88" rx="24" fill="#FFF7ED"/>
+  <rect x="396" y="676" width="244" height="88" rx="24" class="ink hair" fill-opacity="0"/>
+  <text x="126" y="714" class="meta muted">MICROGRIDID</text>
+  <text x="426" y="714" class="meta muted">EMSID</text>
+  <text x="126" y="746" class="body muted">1111...</text>
+  <text x="426" y="746" class="body muted">1000...</text>
+
+  <rect x="96" y="796" width="148" height="42" rx="21" fill="#EEF4E8"/>
+  <rect x="96" y="796" width="148" height="42" rx="21" class="ink hair" fill-opacity="0"/>
+  <text x="126" y="823" class="meta muted">LIMITS</text>
+
+  <rect x="96" y="866" width="544" height="118" rx="28" fill="#FFF7ED"/>
+  <rect x="96" y="866" width="544" height="118" rx="28" class="ink hair" fill-opacity="0"/>
+  <text x="126" y="916" class="body ink-fill">防超容上限</text>
+  <text x="126" y="946" class="tiny muted">超过阈值需限载</text>
+  <text x="506" y="934" class="title ink-fill">22,500</text>
+
+  <rect x="96" y="1010" width="544" height="118" rx="28" fill="#FFF7ED"/>
+  <rect x="96" y="1010" width="544" height="118" rx="28" class="ink hair" fill-opacity="0"/>
+  <text x="126" y="1060" class="body ink-fill">防逆流上限</text>
+  <text x="126" y="1090" class="tiny muted">并网反送控制线</text>
+  <text x="520" y="1078" class="title ink-fill">1,500</text>
+
+  <rect x="96" y="1154" width="544" height="124" rx="28" fill="#F0F5EB"/>
+  <rect x="96" y="1154" width="544" height="124" rx="28" class="ink hair" fill-opacity="0"/>
+  <text x="126" y="1206" class="body ink-fill">快捷查询</text>
+  <text x="126" y="1236" class="tiny muted">把高频运营问题直接做成同侧入口</text>
+  <rect x="126" y="1252" width="212" height="14" rx="7" fill="#4C3B2E" fill-opacity="0.12"/>
+  <rect x="126" y="1278" width="258" height="12" rx="6" fill="#4C3B2E" fill-opacity="0.08"/>
+</svg>
