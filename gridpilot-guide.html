@@ -660,6 +660,28 @@ img { display: block; max-width: 100%; }
 <li>双击运行</li>
 </ol>
 <hr>
+<h2>首次启动安全提示</h2>
+<p>根据当前构建配置，macOS 安装包启用了签名流程，但未启用 Apple notarize 公证；如果构建时提供了 Developer ID 证书，会保留正式签名，否则会回退到 ad-hoc 签名。Windows 和 Linux 构建未在项目配置中启用额外的公证或平台信誉建立流程，因此在首次启动或首次安装时，系统仍可能弹出安全提示。这属于操作系统的常见保护机制，并不一定表示安装包有问题。</p>
+<h3>macOS：Gatekeeper 首次启动提示</h3>
+<p>如果 macOS 提示无法验证开发者、阻止打开 GridPilot，可以任选以下方式处理：</p>
+<ol>
+<li><strong>方案一</strong>：在 Applications 中找到 <code>GridPilot.app</code>，右键点击「打开」，然后在二次确认弹窗中继续打开。</li>
+<li><strong>方案二</strong>：打开「系统设置 → 隐私与安全性」，滚动到安全性区域，找到被拦截的 GridPilot 提示，点击「仍要打开」。</li>
+<li><strong>方案三</strong>：如果应用已经拖入 Applications 但仍被隔离，可在终端运行以下命令移除隔离属性：</li>
+</ol>
+<pre><code>xattr -cr /Applications/GridPilot.app
+</code></pre>
+<p>执行后重新启动应用即可。请仅在你确认安装包来源可信时使用该命令。</p>
+<h3>Windows：SmartScreen 阻止安装或运行</h3>
+<p>如果 Windows Defender SmartScreen 拦截安装包或首次运行，可以按以下方式处理：</p>
+<ol>
+<li><strong>方案一</strong>：在 SmartScreen 对话框中点击「更多信息」，然后选择「仍要运行」。</li>
+<li><strong>方案二</strong>：如果系统限制了应用来源，可前往「设置 → 应用 → 高级应用设置」，放宽“选择获取应用的位置”或相关安装来源限制后再试。</li>
+</ol>
+<p>如果仍然无法启动，建议重新下载一次安装包，并确认文件来自可信的发布渠道。</p>
+<h3>Linux：首次运行权限提示</h3>
+<p>Linux 平台通常不会弹出与 Gatekeeper 或 SmartScreen 相同的系统提示，但 AppImage 首次运行前必须具备可执行权限。如果双击无响应，请先确认文件已勾选“允许执行”，或执行 <code>chmod +x GridPilot-*.AppImage</code> 后再启动。</p>
+<hr>
 <h2>首次启动配置向导</h2>
 <p>首次启动时，GridPilot 会自动打开设置中心，以引导式方式帮助你完成几项前置配置。整个过程以清晰的文字说明和状态提示为主，每一步都可以即时验证，也支持先跳过、稍后再补充。</p>
 <h3>步骤 1：Claude Code CLI 检测</h3>
@@ -1845,12 +1867,20 @@ AI 综合数据，生成分析结论
             <p class="section-summary">集中处理安装、配置、图表、缓存和日志排查问题。</p>
           </div>
         </div>
-        <div class="prose"><h2>安装类</h2>
+<div class="prose"><h2>安装类</h2>
 <h3>macOS 提示&quot;无法验证开发者&quot;</h3>
-<p>这是 macOS 的安全机制，并非应用问题。解决方法：</p>
+<p>这是 macOS Gatekeeper 的安全机制。当前项目的 macOS 构建未启用 notarize 公证，因此首次打开时仍可能出现提示。可以按以下方式处理：</p>
 <ol>
-<li>打开「系统偏好设置 → 安全性与隐私 → 通用」</li>
-<li>找到被拦截的 GridPilot 提示，点击「仍要打开」</li>
+<li>在 Applications 中右键 <code>GridPilot.app</code> → 「打开」→ 在确认弹窗中继续打开</li>
+<li>打开「系统设置 → 隐私与安全性」，找到被拦截的 GridPilot 提示，点击「仍要打开」</li>
+<li>如果应用已拖入 Applications 但仍无法启动，可在终端执行 <code>xattr -cr /Applications/GridPilot.app</code> 后重试</li>
+</ol>
+<h3>Windows 提示&quot;Windows 已保护你的电脑&quot;</h3>
+<p>这是 Windows Defender SmartScreen 的提示，常见于首次安装未建立信誉的新应用。可以这样处理：</p>
+<ol>
+<li>在拦截窗口中点击「更多信息」</li>
+<li>确认安装包来源可信后，点击「仍要运行」</li>
+<li>如果系统限制非商店来源应用，可前往「设置 → 应用 → 高级应用设置」调整安装来源限制后再试</li>
 </ol>
 <h3>应用启动后白屏</h3>
 <p>可能原因及解决方法：</p>
