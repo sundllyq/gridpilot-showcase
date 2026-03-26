@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GridPilot | 版本更新</title>
+    <style>
+        :root {
+            --bg: #f6efe5;
+            --bg-deep: #f0e6d9;
+            --surface: rgba(255, 251, 245, 0.84);
+            --surface-strong: #fffaf2;
+            --ink: #211a15;
+            --muted: #76695c;
+            --line: rgba(63, 45, 28, 0.12);
+            --line-strong: rgba(63, 45, 28, 0.22);
+            --accent: #bf6c34;
+            --accent-soft: rgba(191, 108, 52, 0.12);
+            --shadow: 0 24px 80px -38px rgba(74, 49, 30, 0.24);
+            --radius-xl: 32px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100dvh;
+            color: var(--ink);
+            font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC",
+                "Microsoft YaHei", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 255, 255, 0.62), transparent 34%),
+                radial-gradient(circle at 86% 14%, rgba(191, 108, 52, 0.08), transparent 22%),
+                linear-gradient(180deg, #f8f2e8 0%, var(--bg) 52%, var(--bg-deep) 100%);
+        }
+
+        ::selection {
+            background: rgba(191, 108, 52, 0.18);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        code {
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: rgba(191, 108, 52, 0.1);
+            color: #8b4f28;
+            font-family: "SFMono-Regular", "Menlo", "Monaco", "Courier New", monospace;
+            font-size: 0.92em;
+        }
+
+        main {
+            position: relative;
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 96px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 8px 0 26px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-copy small {
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .topnav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .topnav a {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(63, 45, 28, 0.1);
+            background: rgba(255, 250, 243, 0.62);
+            color: var(--muted);
+            font-size: 14px;
+            transition: transform 160ms ease, border-color 160ms ease, color 160ms ease;
+        }
+
+        .topnav a:hover {
+            transform: translateY(-1px);
+            border-color: rgba(191, 108, 52, 0.25);
+            color: var(--ink);
+        }
+
+        .nav-primary {
+            background: var(--accent) !important;
+            color: #fff7f0 !important;
+            border-color: transparent !important;
+            font-weight: 600;
+            box-shadow: 0 18px 44px -26px rgba(159, 87, 36, 0.58);
+        }
+
+        .surface {
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.62);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 252, 246, 0.5)),
+                rgba(255, 250, 244, 0.88);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.56),
+                var(--shadow);
+            backdrop-filter: blur(20px);
+        }
+
+        .hero {
+            padding: 34px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(191, 108, 52, 0.18);
+            background: rgba(255, 248, 241, 0.84);
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        .hero h1 {
+            margin: 18px 0 14px;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 0.98;
+            letter-spacing: -0.05em;
+        }
+
+        .hero-lede {
+            max-width: 72ch;
+            margin: 0;
+            color: var(--muted);
+            font-size: clamp(1rem, 1.45vw, 1.18rem);
+            line-height: 1.8;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr);
+            gap: 24px;
+            margin-top: 28px;
+            align-items: start;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 18px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .sidebar-card {
+            padding: 22px;
+        }
+
+        .sidebar-card small {
+            display: inline-block;
+            margin-bottom: 12px;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .sidebar-card strong {
+            display: block;
+            font-size: 1.4rem;
+            letter-spacing: -0.04em;
+        }
+
+        .sidebar-card p {
+            margin: 12px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .toc {
+            display: grid;
+            gap: 8px;
+        }
+
+        .toc a {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 14px;
+            color: var(--muted);
+            transition: background 150ms ease, color 150ms ease;
+        }
+
+        .toc a:hover {
+            background: rgba(191, 108, 52, 0.08);
+            color: var(--ink);
+        }
+
+        .content {
+            display: grid;
+            gap: 24px;
+        }
+
+        .release-entry {
+            padding: 32px;
+            scroll-margin-top: 32px;
+        }
+
+        .entry-head {
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(63, 45, 28, 0.09);
+        }
+
+        .entry-label {
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .entry-head h2 {
+            margin: 12px 0 14px;
+            font-size: clamp(2rem, 3.8vw, 3rem);
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .entry-head p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .entry-section {
+            padding-top: 28px;
+        }
+
+        .entry-section+.entry-section {
+            margin-top: 28px;
+            border-top: 1px dashed rgba(63, 45, 28, 0.14);
+        }
+
+        .entry-section h3 {
+            margin: 0 0 12px;
+            font-size: 1.6rem;
+            letter-spacing: -0.04em;
+        }
+
+        .section-intro {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .summary-list {
+            display: grid;
+            gap: 14px;
+            margin: 18px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .summary-list li {
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 252, 246, 0.64);
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .summary-list strong {
+            color: var(--ink);
+        }
+
+        .sub-block {
+            margin-top: 22px;
+        }
+
+        .sub-block h4 {
+            margin: 0 0 10px;
+            font-size: 1.12rem;
+            letter-spacing: -0.02em;
+        }
+
+        .sub-block p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .sub-block p+p {
+            margin-top: 12px;
+        }
+
+        .bullet-list {
+            display: grid;
+            gap: 10px;
+            margin: 16px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 16px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .bullet-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.7em;
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        .step-list {
+            margin: 16px 0 0;
+            padding-left: 18px;
+            color: var(--muted);
+        }
+
+        .step-list li {
+            line-height: 1.8;
+        }
+
+        .step-list li+li {
+            margin-top: 6px;
+        }
+
+        .note {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(191, 108, 52, 0.16);
+            background: rgba(191, 108, 52, 0.08);
+        }
+
+        .note strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            letter-spacing: 0.02em;
+        }
+
+        .note p,
+        .note li {
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .code-block {
+            overflow-x: auto;
+            margin-top: 16px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 252, 246, 0.7);
+            color: #54463a;
+            font-family: "SFMono-Regular", "Menlo", "Monaco", "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 252, 246, 0.7);
+        }
+
+        table {
+            width: 100%;
+            min-width: 620px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 16px;
+            text-align: left;
+            vertical-align: top;
+            border-top: 1px solid rgba(63, 45, 28, 0.08);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        tr:first-child th,
+        tr:first-child td {
+            border-top: none;
+        }
+
+        th {
+            color: var(--ink);
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.44);
+        }
+
+        td {
+            color: var(--muted);
+        }
+
+        .compact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .compact-card {
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 252, 246, 0.64);
+        }
+
+        .compact-card strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .compact-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .footnote {
+            margin-top: 56px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(63, 45, 28, 0.16);
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 1080px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+        @media (max-width: 720px) {
+            main {
+                width: min(100% - 24px, 1180px);
+                padding-top: 20px;
+            }
+
+            .topbar,
+            .topnav,
+            .sidebar,
+            .compact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar,
+            .topnav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .hero,
+            .release-entry {
+                padding: 24px;
+            }
+
+            .sidebar {
+                display: grid;
+            }
+
+            table {
+                min-width: 540px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header class="topbar">
+            <a class="brand" href="#top">
+                <span class="brand-copy">
+                    <strong>GridPilot</strong>
+                    <small>Microgrid Operations AI</small>
+                </span>
+            </a>
+            <nav class="topnav" aria-label="页面导航">
+                <a href="#overview">概览</a>
+                <a href="#experience">核心体验</a>
+                <a href="#platform">底层能力</a>
+                <a href="index.html">回到 Showcase</a>
+                <a class="nav-primary" href="#top">版本更新</a>
+            </nav>
+        </header>
+
+        <section class="hero surface" id="top">
+            <div class="eyebrow">GridPilot Weekly Update</div>
+            <h1>2026 W13 周更新</h1>
+            <p class="hero-lede">
+                本周核心是消息渲染管线重构和可视化能力跃升。Agent 的回答从“文字一坨，图表堆在底部”升级成更像结构化报告的图文交替体验，同时补上 SVG 概念图、图表点击钻取、过程追踪折叠、MCP 按需连接、SSE 会话管理加固等一整组能力。
+            </p>
+        </section>
+
+        <div class="layout">
+            <aside class="sidebar">
+                <section class="surface sidebar-card">
+                    <small>说明</small>
+                    <strong>更新档案页</strong>
+                    <p>这页改成了更偏发布说明的结构，当前收录 W13 更新。后续继续追加新版本时，可以沿用同样的章节组织。</p>
+                </section>
+
+                <nav class="surface sidebar-card toc" aria-label="目录">
+                    <small>目录</small>
+                    <a href="#overview">概览</a>
+                    <a href="#experience">核心体验更新</a>
+                    <a href="#platform">稳定性与底层能力</a>
+                </nav>
+            </aside>
+
+            <div class="content">
+                <article class="surface release-entry" id="w13">
+                    <header class="entry-head">
+                        <div class="entry-label">2026 W13 · 3/23 ~ 3/26</div>
+                        <h2>消息渲染管线重构 + 可视化能力跃升</h2>
+                        <p>
+                            这次更新的重点不是单点修补，而是把“Agent 如何输出一份可读的分析结果”整条链路重做了一遍。前台体验更顺，后台的会话、工具、类型和 Skill 体系也一起补齐。
+                        </p>
+                    </header>
+
+                    <section class="entry-section" id="overview">
+                        <h3>概览</h3>
+                        <p class="section-intro">如果只看这一版最值得关注的变化，可以先看下面这六件事。</p>
+                        <ul class="summary-list">
+                            <li><strong>SVG 概念图上线：</strong>概念型问题不再只靠文字解释，Agent 可以直接输出安全过滤后的 SVG 示意图。</li>
+                            <li><strong>消息融合渲染完成：</strong>文字和图表可以交替出现，最终效果更像图文分析报告，而不是工具结果堆叠。</li>
+                            <li><strong>过程追踪更克制：</strong>中间推理默认折叠进“过程笔记”，最终回答延迟 450ms 渐进揭示，视觉更稳。</li>
+                            <li><strong>图表交互增强：</strong>图表入场动画更平滑，点击时间点后还能自动生成追问继续诊断。</li>
+                            <li><strong>MCP 连接更聪明：</strong>闲聊和概念问答不再默认连工具服务，响应速度更快。</li>
+                            <li><strong>平台能力一起补强：</strong>SSE 流、可视化组合引擎、Skill 诊断体系、类型系统与测试覆盖都同步推进。</li>
+                        </ul>
+                    </section>
+
+                    <section class="entry-section" id="experience">
+                        <h3>核心体验更新</h3>
+                        <p class="section-intro">这一组变化最直接，用户在对话界面里基本都能感受到。</p>
+
+                        <div class="sub-block">
+                            <h4>1. SVG 概念图：从 Mermaid 到矢量图</h4>
+                            <p>当用户问“峰谷套利原理是什么”“这个微网的拓扑结构”“排程决策流程”这类概念问题时，Agent 现在可以直接在对话里渲染 SVG 概念图。相比 Mermaid，这种方式对拓扑、功率流向、设备连接关系这类自由图形的表达力更强，也不会被固定图形语法绑住。</p>
+                            <div class="table-wrap">
+                                <table>
+                                    <tr>
+                                        <th>场景</th>
+                                        <th>示例问题</th>
+                                        <th>输出形式</th>
+                                    </tr>
+                                    <tr>
+                                        <td>原理解释</td>
+                                        <td>“峰谷套利 / 削峰填谷的原理是什么？”</td>
+                                        <td>SVG 原理示意图</td>
+                                    </tr>
+                                    <tr>
+                                        <td>拓扑结构</td>
+                                        <td>“这个微网的设备连接关系”</td>
+                                        <td>SVG 拓扑图</td>
+                                    </tr>
+                                    <tr>
+                                        <td>决策流程</td>
+                                        <td>“排程怎么决定充放电时段？”</td>
+                                        <td>SVG 流程图</td>
+                                    </tr>
+                                    <tr>
+                                        <td>状态机</td>
+                                        <td>“电价时段是怎么划分的？”</td>
+                                        <td>SVG 状态转换图</td>
+                                    </tr>
+                                    <tr>
+                                        <td>功率流向</td>
+                                        <td>“储能放电时功率怎么流动？”</td>
+                                        <td>SVG 流向示意图</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="note">
+                                <strong>安全机制</strong>
+                                <ul class="bullet-list">
+                                    <li>剥离 <code>&lt;script&gt;</code> 标签。</li>
+                                    <li>移除 <code>&lt;foreignObject&gt;</code> 嵌入。</li>
+                                    <li>清除所有 <code>on*</code> 事件处理器。</li>
+                                    <li>替换 <code>javascript:</code> 协议 URL。</li>
+                                    <li>替换 <code>data:</code> 协议 URL。</li>
+                                </ul>
+                            </div>
+                            <p>边界也被明确写进系统提示里了：功率曲线、SOC 变化、负荷趋势、电价走势这类时间序列数据禁止走 SVG，必须通过 MCP 拿数据后交给前端图表组件渲染。</p>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>2. 消息融合渲染：图文交替的报告式体验</h4>
+                            <p>以前的结果更像“先吐一大段文字，再把工具结果堆在底部”。现在渲染层把 Claude 返回的 content blocks 解析成统一的内容片段序列，按顺序交替展示文字和工具结果，阅读上更像一份结构化报告。</p>
+                            <div class="code-block">以前：
+[一大段分析文字...]
+[工具结果 1][工具结果 2][工具结果 3]
+
+现在：
+[一段分析文字]
+[排程 vs 运行对比图表]
+[继续分析偏差原因]
+[电价时段图表]
+[最终结论和建议]</div>
+                            <ul class="bullet-list">
+                                <li><strong>内容解析：</strong><code>parseInterleavedContent()</code> 统一产出 <code>ContentSegment[]</code>。</li>
+                                <li><strong>交替渲染：</strong>完成态和流式态都按 segment 顺序渲染，文字和图表不再硬分家。</li>
+                                <li><strong>组合检测保留：</strong>虽然图表视觉上分散，但组合逻辑仍能看到完整工具集合，不影响“三件套”“四件套”识别。</li>
+                            </ul>
+                            <p>这里还顺手解决了一个细节问题：模型有时会先说半句话，再调工具，回来把这句话补完。现在只有恢复的文本明显像新的 Markdown 块时才会强制换段，避免一句话被机械拆开。</p>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>3. 过程追踪：折叠中间推理，最终回答渐进出现</h4>
+                            <p>复杂诊断时，Agent 的中间思路现在默认被收进“过程笔记”，折叠态只显示数量和最新预览；最终回答则在工具执行完成后延迟 450ms 显示，配合 shimmer 过渡，避免大段文字突兀弹出。</p>
+                            <div class="table-wrap">
+                                <table>
+                                    <tr>
+                                        <th>状态</th>
+                                        <th>何时出现</th>
+                                        <th>用户看到什么</th>
+                                    </tr>
+                                    <tr>
+                                        <td><code>none</code></td>
+                                        <td>普通对话，无需缓冲</td>
+                                        <td>文字直接显示</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>pre_tool</code></td>
+                                        <td>Agent 开始输出文字但还没调工具</td>
+                                        <td>shimmer 占位动画</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>pending_final</code></td>
+                                        <td>工具全部执行完，最终回答即将出现</td>
+                                        <td>短暂 shimmer 后文字浮现</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>4. 图表交互增强：入场动画 + 点击钻取</h4>
+                            <p>图表不再是“数据一到就啪地出现”，而是增加了 180ms 的淡入和轻微缩放过渡。更实用的是点击钻取：用户可以直接点击图表中的某个时间段，系统会自动组装一条中文追问并发回 Agent，继续围绕这个时间点做诊断。</p>
+                            <ol class="step-list">
+                                <li>图表组件点击后传出分钟值和 <code>HH:mm</code> 时间字符串。</li>
+                                <li>从当前工具输入提取 <code>microGridId</code>、<code>emsId</code>、<code>date</code>。</li>
+                                <li>拼出诊断追问。</li>
+                                <li>通过 <code>gridpilot:send-query</code> 自定义事件发回聊天输入框。</li>
+                            </ol>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>5. 聊天意图检测：闲聊加速，按需连接 MCP</h4>
+                            <p>“你好”“谢谢”“解释一下这个概念”这类不需要查数据的对话，现在不再一上来就连 MCP。系统用三层检测机制判断要不要连接工具服务，尽量在不漏判的前提下减少不必要的连接开销。</p>
+                            <div class="code-block">用户消息
+→ 第一层：是否系统自动触发（autoTrigger）
+→ 第二层：是否命中 51 个领域关键词
+→ 第三层：历史对话中是否已有工具调用痕迹
+→ 如果都没有，直接跳过 MCP 连接</div>
+                            <p>设计原则也很明确：宁可多连，不可漏连。误判成“需要工具”只是慢一点；误判成“不需要工具”会直接失去数据查询能力。</p>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>6. 微网可视化引擎：14+ 种图表组合布局</h4>
+                            <p>不同工具组合现在会自动匹配最合适的图表布局。拿到排程、运行、负荷、电价四类数据时，系统会优先用四合一布局；如果只拿到其中两三项，则切到更贴合的数据视图。</p>
+                            <div class="table-wrap">
+                                <table>
+                                    <tr>
+                                        <th>工具组合</th>
+                                        <th>布局名称</th>
+                                        <th>图表内容</th>
+                                    </tr>
+                                    <tr>
+                                        <td>排程 + 运行 + 负荷 + 电价</td>
+                                        <td>schedule-operation-with-load</td>
+                                        <td>排程计划 vs 实际运行 + 负荷叠加 + 电价背景色</td>
+                                    </tr>
+                                    <tr>
+                                        <td>排程 + 运行 + 电价</td>
+                                        <td>diagnosis</td>
+                                        <td>计划 / 实际对比 + 电价</td>
+                                    </tr>
+                                    <tr>
+                                        <td>排程 + 负荷 + 电价</td>
+                                        <td>schedule-with-load</td>
+                                        <td>排程计划 + 负荷预测 / 实际 + 电价</td>
+                                    </tr>
+                                    <tr>
+                                        <td>排程 + 电价</td>
+                                        <td>schedule-analysis</td>
+                                        <td>排程分析 + 电价时段</td>
+                                    </tr>
+                                    <tr>
+                                        <td>运行 + 负荷</td>
+                                        <td>operation-load</td>
+                                        <td>实际功率 + 负荷</td>
+                                    </tr>
+                                    <tr>
+                                        <td>单独排程 / 运行 / 负荷 / 电价 / 需量 / 回测</td>
+                                        <td>独立布局</td>
+                                        <td>各自对应的单一图表</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <ul class="bullet-list">
+                                <li><strong>区间适配：</strong>运行数据 5 分钟颗粒度，图表统一到 15 分钟后再展示。</li>
+                                <li><strong>字段兼容：</strong>同时兼容 camelCase 和 snake_case。</li>
+                                <li><strong>历史 typo 容错：</strong>像 <code>priceLcass</code> 这样的后端旧字段名也在标准化层兼容掉了。</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section class="entry-section" id="platform">
+                        <h3>稳定性与底层能力</h3>
+                        <p class="section-intro">这部分不一定直接可见，但对长时对话、诊断稳定性和后续扩展都很关键。</p>
+
+                        <div class="sub-block">
+                            <h4>7. SSE 流会话管理加固</h4>
+                            <p>复杂诊断经常要调 5 到 6 个工具，持续两分钟以上并不罕见。这一版把流管理器的空闲超时放宽到 330 秒，同时补上工具超时重试、请求注册表和结构化消息构建，减少“静默断流”和对话卡死。</p>
+                            <div class="compact-grid">
+                                <div class="compact-card">
+                                    <strong>长任务更稳</strong>
+                                    <p>330 秒无新事件才中断，复杂诊断不容易被误伤。</p>
+                                </div>
+                                <div class="compact-card">
+                                    <strong>工具超时可重试</strong>
+                                    <p>保留已有上下文和内容，自动发起补跑，而不是整段对话作废。</p>
+                                </div>
+                                <div class="compact-card">
+                                    <strong>结构化消息落库</strong>
+                                    <p>流完成后把文字、工具调用和工具结果按序列化数组存库，支持后续融合渲染。</p>
+                                </div>
+                                <div class="compact-card">
+                                    <strong>13 类事件统一派发</strong>
+                                    <p>包括 text、tool_use、tool_result、status、error 等，流处理更清晰。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>8. Skills 诊断体系整合</h4>
+                            <p>原先充电异常和放电异常分成两个 Skill，在跨充放电问题上天然容易只看到一半。现在统一成 <code>ess-diagnosis</code>，按同一条四阶段链路做诊断。</p>
+                            <div class="code-block">阶段一：上下文准备
+阶段二：并行数据采集
+阶段三：根因分析
+阶段四：结构化报告</div>
+                            <ul class="bullet-list">
+                                <li><strong>共享模板：</strong><code>output-diagnosis.md</code>、<code>context-prep.md</code>、<code>unit-conversion.md</code> 被提到 <code>_shared/</code> 目录下复用。</li>
+                                <li><strong>response-confirm：</strong>压缩到 3 到 5 句，结论先行，不抢做原因分析。</li>
+                                <li><strong>response-review：</strong>偏差分析限制为 3 个最显著时段，并统一使用标准缩写。</li>
+                                <li><strong>revenue-analysis：</strong>明确区分真实收益与回测 / 模拟 / 计划收益，计算改为脚本执行。</li>
+                            </ul>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>9. 类型系统与数据模型扩展</h4>
+                            <p>这一版的功能跨度比较大，所以类型层也跟着补齐了，避免流式消息、结构化内容和多种 Agent 参数继续靠隐式约定往前推。</p>
+                            <ul class="bullet-list">
+                                <li><code>MessageContentBlock</code>：统一表达 text / tool_use / tool_result / code。</li>
+                                <li><code>StreamPhase</code>：管理流生命周期状态。</li>
+                                <li><code>SessionStreamSnapshot</code>：记录工具列表、结果、token 用量、权限请求和最终消息。</li>
+                                <li><code>StreamEvent</code>：类型化事件通知。</li>
+                                <li><code>ChatSession</code>：新增 <code>micro_grid_id</code> / <code>ems_id</code>，把微网上下文持久化到会话。</li>
+                                <li><code>ClaudeStreamOptions</code>：扩展 <code>autoTrigger</code>、<code>thinking</code>、<code>effort</code>、<code>agents</code> 等能力。</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                </article>
+            </div>
+        </div>
+
+        <footer class="footnote">
+            当前页面内容基于 <code>docs/weekly-update-2026-w13.md</code> 整理。后续如果继续发布更新，可以继续在此页按周追加新的更新条目。
+        </footer>
+    </main>
+</body>
+
+</html>
