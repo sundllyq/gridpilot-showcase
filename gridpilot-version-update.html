@@ -401,6 +401,28 @@
             line-height: 1.75;
         }
 
+        .feature-figure {
+            margin-top: 18px;
+            overflow: hidden;
+            border-radius: 18px;
+            border: 1px solid rgba(63, 45, 28, 0.08);
+            background: rgba(255, 252, 246, 0.72);
+        }
+
+        .feature-figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .feature-figure figcaption {
+            padding: 14px 16px;
+            border-top: 1px solid rgba(63, 45, 28, 0.08);
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
         .code-block {
             overflow-x: auto;
             margin-top: 16px;
@@ -621,6 +643,10 @@
                         <div class="sub-block">
                             <h4>1. SVG 概念图：从 Mermaid 到矢量图</h4>
                             <p>当用户问“峰谷套利原理是什么”“这个微网的拓扑结构”“排程决策流程”这类概念问题时，Agent 现在可以直接在对话里渲染 SVG 概念图。相比 Mermaid，这种方式对拓扑、功率流向、设备连接关系这类自由图形的表达力更强，也不会被固定图形语法绑住。</p>
+                            <figure class="feature-figure">
+                                <img src="pics/SVG能力.png" alt="SVG 概念图示例，展示储能系统工作原理和核心概念" />
+                                <figcaption>示例图：储能系统工作原理。概念性问题现在可以直接在对话中输出这类 SVG 示意图，帮助用户更快理解原理和结构。</figcaption>
+                            </figure>
                             <div class="table-wrap">
                                 <table>
                                     <tr>
