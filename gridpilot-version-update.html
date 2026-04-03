@@ -234,12 +234,23 @@
             padding: 10px 12px;
             border-radius: 14px;
             color: var(--muted);
+            font-size: 14px;
             transition: background 150ms ease, color 150ms ease;
         }
 
         .toc a:hover {
             background: rgba(191, 108, 52, 0.08);
             color: var(--ink);
+        }
+
+        .toc .toc-sub {
+            padding-left: 24px;
+            font-size: 13px;
+            color: #8a7b6c;
+        }
+
+        .toc .toc-sub:hover {
+            background: rgba(191, 108, 52, 0.06);
         }
 
         .content {
@@ -591,9 +602,9 @@
 
         <section class="hero surface" id="top">
             <div class="eyebrow">GridPilot Weekly Update</div>
-            <h1>2026 W13 周更新</h1>
+            <h1>2026 W14 周更新</h1>
             <p class="hero-lede">
-                本周重点是消息渲染和可视化升级。Agent 的输出从文字堆叠改成更清晰的图文交替结构，并补上 SVG 概念图、图表钻取和 MCP 按需连接等能力。
+                本周重点是排程接入检查和决策归因两大新能力上线。微网开启智慧排程前可一键自动检查配置和数据完整性；排程分析现在能深入解释决策原因，不再只报告执行结果。同时修正了防逆流功率公式错误，优化了负荷数据接口命名。
             </p>
         </section>
 
@@ -602,47 +613,190 @@
                 <section class="surface sidebar-card">
                     <small>说明</small>
                     <strong>更新档案页</strong>
-                    <p>这页改成了更偏发布说明的结构，当前收录 W13 更新。后续继续追加新版本时，可以沿用同样的章节组织。</p>
+                    <p>这页是发布说明的结构，当前收录 W14 和 W13 两周更新。后续继续追加新版本时，可以沿用同样的章节组织。</p>
                 </section>
 
                 <nav class="surface sidebar-card toc" aria-label="目录">
                     <small>目录</small>
-                    <a href="#overview">概览</a>
-                    <a href="#experience">核心体验更新</a>
-                    <a href="#platform">稳定性与底层能力</a>
+                    <a href="#w14">W14 · 排程接入检查 + 决策归因</a>
+                    <a href="#w14-overview" class="toc-sub">概览</a>
+                    <a href="#w14-features" class="toc-sub">新功能与新能力</a>
+                    <a href="#w14-fixes" class="toc-sub">问题修正与工具更新</a>
+                    <a href="#w13">W13 · 消息渲染 + 可视化跃升</a>
+                    <a href="#w13-overview" class="toc-sub">概览</a>
+                    <a href="#w13-experience" class="toc-sub">核心体验更新</a>
+                    <a href="#w13-platform" class="toc-sub">稳定性与底层能力</a>
                 </nav>
             </aside>
 
             <div class="content">
+                <article class="surface release-entry" id="w14">
+                    <header class="entry-head">
+                        <div class="entry-label">2026 W14 · 3/30 ~ 4/2</div>
+                        <h2>排程接入检查 + 决策归因分析</h2>
+                        <p>
+                            本周上线两大核心能力：微网排程接入自动检查让"能不能开启智慧排程"的判断变成一句话的事；排程决策归因分析则让 Agent 能解释算法背后的决策逻辑，不再只是报告执行结果。同时修正了一个关键的防逆流功率计算公式，并优化了负荷数据接口命名。
+                        </p>
+                    </header>
+
+                    <section class="entry-section" id="w14-overview">
+                        <h3>概览</h3>
+                        <p class="section-intro">本周四项更新，重点关注排程接入和决策分析体验。</p>
+                        <ul class="summary-list">
+                            <li><strong>微网排程接入检查：</strong>一句话自动检查微网是否能开启智慧排程，覆盖配置和历史数据完整性。</li>
+                            <li><strong>排程决策归因分析：</strong>问"为什么排程只充到 82%"时，Agent 现在能解释算法决策原因。</li>
+                            <li><strong>防逆流公式修正：</strong>最大可放电功率公式从加法改为正确的减法，影响放电受限场景分析。</li>
+                            <li><strong>负荷接口重命名：</strong>预测和历史负荷接口名称更直观，区分"预测值"和"真实值"。</li>
+                        </ul>
+                    </section>
+
+                    <section class="entry-section" id="w14-features">
+                        <h3>新功能与新能力</h3>
+                        <p class="section-intro">这两项更新让排程相关场景的交互体验和诊断深度都有了明显提升。</p>
+
+                        <div class="sub-block">
+                            <h4>1. 微网排程接入检查</h4>
+                            <p>当你想确认某个微网是否可以开启智慧排程时，现在可以直接问 Agent 进行自动检查。系统会从两个维度进行验证，并给出明确的检查结果。</p>
+                            <div class="note">
+                                <strong>使用场景示例</strong>
+                                <ul class="bullet-list">
+                                    <li>"帮我检查微网 10000033 能不能开启智慧排程"</li>
+                                    <li>"这几个微网哪个可以接入排程算法 2.0"</li>
+                                    <li>"批量检查一下这些微网的接入条件"</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>基础配置检查</h4>
+                            <p>系统会验证微网是否配置了必要的基础参数，包括 EMS ID、变压器容量、储能容量、储能功率、削峰/需量控制阈值等。如果任何一项缺失，会明确提示"未配置 XX"，方便你快速定位问题。</p>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>历史负荷数据检查</h4>
+                            <p>基础配置通过后，系统会自动拉取该微网过去 90 天的真实负荷数据，检查数据完整性。排程算法 2.0 需要足够的历史负荷数据来训练预测模型，因此要求 90 天内大部分天数有数据记录，且不能出现连续超过 3 天完全无数据的情况。</p>
+                            <div class="table-wrap">
+                                <table>
+                                    <tr>
+                                        <th>检查结果</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>通过</td>
+                                        <td>历史负荷数据完整，可接入智慧排程算法 2.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>未通过</td>
+                                        <td>只能接入基础排程算法 1.0，系统会告知失败原因（如"仅 89 天数据"、"连续 4 天空值"等）</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>智能异常处理</h4>
+                            <p>如果检查过程中遇到问题，Agent 会尝试自主排查而不是直接报错：</p>
+                            <ul class="bullet-list">
+                                <li><strong>微网未找到</strong> → 自动建议先刷新微网列表缓存</li>
+                                <li><strong>网络超时</strong> → 提示检查是否在公司网络或 VPN 环境</li>
+                                <li><strong>缺少配置</strong> → 建议联系运维确认</li>
+                            </ul>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>2. 排程决策归因分析</h4>
+                            <p>当你问"为什么排程只充到 82%"、"排程为什么这么下发"时，Agent 现在会深入分析排程算法的决策依据，而不是只告诉你"执行正常"。</p>
+                            <div class="note">
+                                <strong>之前的局限</strong>
+                                <p>以前当你问这类问题时，Agent 的回答往往是："排程目标 SOC 是 82.4%，实际充到了 82.13%，已达到排程目标，正常执行。"这个回答虽然准确，但没有解释排程算法为什么会把 SOC 上限设为 82.4%。</p>
+                            </div>
+                            <p><strong>现在的改进：</strong>Agent 会切换到"排程决策归因"模式，深入分析算法背后的决策逻辑，由大模型根据具体问题自主决定分析路径，自主调用 MCP 工具获取数据完成分析。</p>
+                            <div class="code-block">示例回答：
+
+"排程将 13:00-14:00 的 SOC 上限设为 82.4%，原因是：峰段预测负荷较低，
+算法判断下午放不完满充电量，所以保守地降低了充电目标。实际充到
+82.13% 后停止，符合排程指令。"</div>
+                            <p>现在的回答会<strong>优先解释决策原因</strong>，再补充执行现象，让你真正理解排程算法在想什么。</p>
+                        </div>
+                    </section>
+
+                    <section class="entry-section" id="w14-fixes">
+                        <h3>问题修正与工具更新</h3>
+                        <p class="section-intro">修正了一个关键的公式错误，同时优化了接口命名让语义更清晰。</p>
+
+                        <div class="sub-block">
+                            <h4>3. 防逆流功率计算公式修正</h4>
+                            <p>修正了一个重要的公式错误，影响放电功率受限场景的分析结果。</p>
+                            <div class="code-block">错误公式：
+最大可放电功率 = 负荷 + 防逆流下限  ← 错误（加法）
+
+正确公式：
+最大可放电功率 = 负荷 - 防逆流下限  ← 正确（减法）</div>
+                            <p><strong>实际影响：</strong>这个修正确保了 Agent 在分析"放电功率为什么受限"时，能给出正确的阈值判断。</p>
+                            <div class="code-block">示例场景：
+储能计划放电功率 23940 kW，实际负荷 5000 kW，防逆流下限 1695 kW。
+
+最大可放电功率 = 5000 - 1695 = 3305 kW
+
+结论：放电功率被防逆流约束限制在 3305 kW 以内。</div>
+                        </div>
+
+                        <div class="sub-block">
+                            <h4>4. 负荷数据接口名称更新</h4>
+                            <p>负荷数据的 API 工具名称进行了更新，使语义更加清晰：</p>
+                            <div class="table-wrap">
+                                <table>
+                                    <tr>
+                                        <th>原名称</th>
+                                        <th>新名称</th>
+                                        <th>含义</th>
+                                    </tr>
+                                    <tr>
+                                        <td><code>get_microgrid_ems_load</code></td>
+                                        <td><code>get_micro_grid_load_pred</code></td>
+                                        <td>获取预测负荷</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>get_microgrid_ems_load</code></td>
+                                        <td><code>get_micro_grid_load_his</code></td>
+                                        <td>获取历史真实负荷</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>新名称更直观地区分了"预测值"和"真实值"，方便 Agent 在不同场景下选择合适的数据源。</p>
+                        </div>
+                    </section>
+                </article>
+
                 <article class="surface release-entry" id="w13">
                     <header class="entry-head">
                         <div class="entry-label">2026 W13 · 3/23 ~ 3/26</div>
                         <h2>消息渲染管线重构 + 可视化能力跃升</h2>
                         <p>
-                            这次更新的重点不是单点修补，而是把“Agent 如何输出一份可读的分析结果”整条链路重做了一遍。前台体验更顺，后台的会话、工具、类型和 Skill 体系也一起补齐。
+                            这次更新的重点不是单点修补，而是把"Agent 如何输出一份可读的分析结果"整条链路重做了一遍。前台体验更顺，后台的会话、工具、类型和 Skill 体系也一起补齐。
                         </p>
                     </header>
 
-                    <section class="entry-section" id="overview">
+                    <section class="entry-section" id="w13-overview">
                         <h3>概览</h3>
                         <p class="section-intro">如果只看这一版最值得关注的变化，可以先看下面这六件事。</p>
                         <ul class="summary-list">
                             <li><strong>SVG 概念图上线：</strong>概念型问题不再只靠文字解释，Agent 可以直接输出安全过滤后的 SVG 示意图。</li>
                             <li><strong>消息融合渲染完成：</strong>文字和图表可以交替出现，最终效果更像图文分析报告，而不是工具结果堆叠。</li>
-                            <li><strong>过程追踪更克制：</strong>中间推理默认折叠进“过程笔记”，最终回答延迟 450ms 渐进揭示，视觉更稳。</li>
+                            <li><strong>过程追踪更克制：</strong>中间推理默认折叠进"过程笔记"，最终回答延迟 450ms 渐进揭示，视觉更稳。</li>
                             <li><strong>图表交互增强：</strong>图表入场动画更平滑，点击时间点后还能自动生成追问继续诊断。</li>
                             <li><strong>MCP 连接更聪明：</strong>闲聊和概念问答不再默认连工具服务，响应速度更快。</li>
                             <li><strong>平台能力一起补强：</strong>SSE 流、可视化组合引擎、Skill 诊断体系、类型系统与测试覆盖都同步推进。</li>
                         </ul>
                     </section>
 
-                    <section class="entry-section" id="experience">
+                    <section class="entry-section" id="w13-experience">
                         <h3>核心体验更新</h3>
                         <p class="section-intro">这一组变化最直接，用户在对话界面里基本都能感受到。</p>
 
                         <div class="sub-block">
                             <h4>1. SVG 概念图：从 Mermaid 到矢量图</h4>
-                            <p>当用户问“峰谷套利原理是什么”“这个微网的拓扑结构”“排程决策流程”这类概念问题时，Agent 现在可以直接在对话里渲染 SVG 概念图。相比 Mermaid，这种方式对拓扑、功率流向、设备连接关系这类自由图形的表达力更强，也不会被固定图形语法绑住。</p>
+                            <p>当用户问"峰谷套利原理是什么""这个微网的拓扑结构""排程决策流程"这类概念问题时，Agent 现在可以直接在对话里渲染 SVG 概念图。相比 Mermaid，这种方式对拓扑、功率流向、设备连接关系这类自由图形的表达力更强，也不会被固定图形语法绑住。</p>
                             <figure class="feature-figure">
                                 <img src="pics/SVG能力.png" alt="SVG 概念图示例，展示储能系统工作原理和核心概念" />
                                 <figcaption>示例图：储能系统工作原理。概念性问题现在可以直接在对话中输出这类 SVG 示意图，帮助用户更快理解原理和结构。</figcaption>
@@ -656,27 +810,27 @@
                                     </tr>
                                     <tr>
                                         <td>原理解释</td>
-                                        <td>“峰谷套利 / 削峰填谷的原理是什么？”</td>
+                                        <td>"峰谷套利 / 削峰填谷的原理是什么？"</td>
                                         <td>SVG 原理示意图</td>
                                     </tr>
                                     <tr>
                                         <td>拓扑结构</td>
-                                        <td>“这个微网的设备连接关系”</td>
+                                        <td>"这个微网的设备连接关系"</td>
                                         <td>SVG 拓扑图</td>
                                     </tr>
                                     <tr>
                                         <td>决策流程</td>
-                                        <td>“排程怎么决定充放电时段？”</td>
+                                        <td>"排程怎么决定充放电时段？"</td>
                                         <td>SVG 流程图</td>
                                     </tr>
                                     <tr>
                                         <td>状态机</td>
-                                        <td>“电价时段是怎么划分的？”</td>
+                                        <td>"电价时段是怎么划分的？"</td>
                                         <td>SVG 状态转换图</td>
                                     </tr>
                                     <tr>
                                         <td>功率流向</td>
-                                        <td>“储能放电时功率怎么流动？”</td>
+                                        <td>"储能放电时功率怎么流动？"</td>
                                         <td>SVG 流向示意图</td>
                                     </tr>
                                 </table>
@@ -696,7 +850,7 @@
 
                         <div class="sub-block">
                             <h4>2. 消息融合渲染：图文交替的报告式体验</h4>
-                            <p>以前的结果更像“先吐一大段文字，再把工具结果堆在底部”。现在渲染层把 Claude 返回的 content blocks 解析成统一的内容片段序列，按顺序交替展示文字和工具结果，阅读上更像一份结构化报告。</p>
+                            <p>以前的结果更像"先吐一大段文字，再把工具结果堆在底部"。现在渲染层把 Claude 返回的 content blocks 解析成统一的内容片段序列，按顺序交替展示文字和工具结果，阅读上更像一份结构化报告。</p>
                             <div class="code-block">以前：
 [一大段分析文字...]
 [工具结果 1][工具结果 2][工具结果 3]
@@ -710,14 +864,14 @@
                             <ul class="bullet-list">
                                 <li><strong>内容解析：</strong><code>parseInterleavedContent()</code> 统一产出 <code>ContentSegment[]</code>。</li>
                                 <li><strong>交替渲染：</strong>完成态和流式态都按 segment 顺序渲染，文字和图表不再硬分家。</li>
-                                <li><strong>组合检测保留：</strong>虽然图表视觉上分散，但组合逻辑仍能看到完整工具集合，不影响“三件套”“四件套”识别。</li>
+                                <li><strong>组合检测保留：</strong>虽然图表视觉上分散，但组合逻辑仍能看到完整工具集合，不影响"三件套""四件套"识别。</li>
                             </ul>
                             <p>这里还顺手解决了一个细节问题：模型有时会先说半句话，再调工具，回来把这句话补完。现在只有恢复的文本明显像新的 Markdown 块时才会强制换段，避免一句话被机械拆开。</p>
                         </div>
 
                         <div class="sub-block">
                             <h4>3. 过程追踪：折叠中间推理，最终回答渐进出现</h4>
-                            <p>复杂诊断时，Agent 的中间思路现在默认被收进“过程笔记”，折叠态只显示数量和最新预览；最终回答则在工具执行完成后延迟 450ms 显示，配合 shimmer 过渡，避免大段文字突兀弹出。</p>
+                            <p>复杂诊断时，Agent 的中间思路现在默认被收进"过程笔记"，折叠态只显示数量和最新预览；最终回答则在工具执行完成后延迟 450ms 显示，配合 shimmer 过渡，避免大段文字突兀弹出。</p>
                             <div class="table-wrap">
                                 <table>
                                     <tr>
@@ -746,7 +900,7 @@
 
                         <div class="sub-block">
                             <h4>4. 图表交互增强：入场动画 + 点击钻取</h4>
-                            <p>图表不再是“数据一到就啪地出现”，而是增加了 180ms 的淡入和轻微缩放过渡。更实用的是点击钻取：用户可以直接点击图表中的某个时间段，系统会自动组装一条中文追问并发回 Agent，继续围绕这个时间点做诊断。</p>
+                            <p>图表不再是"数据一到就啪地出现"，而是增加了 180ms 的淡入和轻微缩放过渡。更实用的是点击钻取：用户可以直接点击图表中的某个时间段，系统会自动组装一条中文追问并发回 Agent，继续围绕这个时间点做诊断。</p>
                             <ol class="step-list">
                                 <li>图表组件点击后传出分钟值和 <code>HH:mm</code> 时间字符串。</li>
                                 <li>从当前工具输入提取 <code>microGridId</code>、<code>emsId</code>、<code>date</code>。</li>
@@ -757,13 +911,13 @@
 
                         <div class="sub-block">
                             <h4>5. 聊天意图检测：闲聊加速，按需连接 MCP</h4>
-                            <p>“你好”“谢谢”“解释一下这个概念”这类不需要查数据的对话，现在不再一上来就连 MCP。系统用三层检测机制判断要不要连接工具服务，尽量在不漏判的前提下减少不必要的连接开销。</p>
+                            <p>"你好""谢谢""解释一下这个概念"这类不需要查数据的对话，现在不再一上来就连 MCP。系统用三层检测机制判断要不要连接工具服务，尽量在不漏判的前提下减少不必要的连接开销。</p>
                             <div class="code-block">用户消息
 → 第一层：是否系统自动触发（autoTrigger）
 → 第二层：是否命中 51 个领域关键词
 → 第三层：历史对话中是否已有工具调用痕迹
 → 如果都没有，直接跳过 MCP 连接</div>
-                            <p>设计原则也很明确：宁可多连，不可漏连。误判成“需要工具”只是慢一点；误判成“不需要工具”会直接失去数据查询能力。</p>
+                            <p>设计原则也很明确：宁可多连，不可漏连。误判成"需要工具"只是慢一点；误判成"不需要工具"会直接失去数据查询能力。</p>
                         </div>
 
                         <div class="sub-block">
@@ -816,13 +970,13 @@
                         </div>
                     </section>
 
-                    <section class="entry-section" id="platform">
+                    <section class="entry-section" id="w13-platform">
                         <h3>稳定性与底层能力</h3>
                         <p class="section-intro">这部分不一定直接可见，但对长时对话、诊断稳定性和后续扩展都很关键。</p>
 
                         <div class="sub-block">
                             <h4>7. SSE 流会话管理加固</h4>
-                            <p>复杂诊断经常要调 5 到 6 个工具，持续两分钟以上并不罕见。这一版把流管理器的空闲超时放宽到 330 秒，同时补上工具超时重试、请求注册表和结构化消息构建，减少“静默断流”和对话卡死。</p>
+                            <p>复杂诊断经常要调 5 到 6 个工具，持续两分钟以上并不罕见。这一版把流管理器的空闲超时放宽到 330 秒，同时补上工具超时重试、请求注册表和结构化消息构建，减少"静默断流"和对话卡死。</p>
                             <div class="compact-grid">
                                 <div class="compact-card">
                                     <strong>长任务更稳</strong>
@@ -877,7 +1031,7 @@
         </div>
 
         <footer class="footnote">
-            当前页面内容基于 <code>docs/weekly-update-2026-w13.md</code> 整理。后续如果继续发布更新，可以继续在此页按周追加新的更新条目。
+            当前页面收录 W14 (2026/3/30 ~ 4/2) 和 W13 (2026/3/23 ~ 3/26) 两周的更新内容。后续如果继续发布更新，可以在此页按周追加新的更新条目。
         </footer>
     </main>
 </body>
